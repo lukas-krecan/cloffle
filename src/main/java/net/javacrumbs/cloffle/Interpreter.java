@@ -21,10 +21,9 @@ import com.oracle.truffle.api.frame.FrameDescriptor;
 
 public class Interpreter {
 
-    public Object interpret(ClojureNode[] bodyNodes) {
+    public Object interpret(ClojureNode... bodyNodes) {
         FrameDescriptor frameDescriptor = new FrameDescriptor();
         RootCallTarget callTarget = Truffle.getRuntime().createCallTarget(ClojureRootNode.create(bodyNodes, frameDescriptor));
-        callTarget.call();
-        return null;
+        return callTarget.call();
     }
 }

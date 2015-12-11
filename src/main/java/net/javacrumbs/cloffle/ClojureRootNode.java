@@ -15,9 +15,10 @@
  */
 package net.javacrumbs.cloffle;
 
+import com.oracle.truffle.api.CompilerAsserts;
 import com.oracle.truffle.api.frame.FrameDescriptor;
-import com.oracle.truffle.api.frame.FrameSlot;
 import com.oracle.truffle.api.frame.VirtualFrame;
+import com.oracle.truffle.api.nodes.ExplodeLoop;
 import com.oracle.truffle.api.nodes.RootNode;
 
 public class ClojureRootNode extends RootNode {
@@ -31,11 +32,17 @@ public class ClojureRootNode extends RootNode {
     }
 
     @Override
+    @ExplodeLoop
     public Object execute(VirtualFrame virtualFrame) {
-        return null;
+        int last = this.bodyNodes.length - 1;
+        CompilerAsserts.compilationConstant(last);
+        for (int i = 0; i < last; i++) {
+            this.bodyNodes[i].execute(virtualFrame);
+        }
+        return this.bodyNodes[last].execute(virtualFrame);
     }
 
     public static ClojureRootNode create(ClojureNode[] bodyNodes, FrameDescriptor frameDescriptor) {
-         return new ClojureRootNode(bodyNodes, frameDescriptor);
+        return new ClojureRootNode(bodyNodes, frameDescriptor);
     }
 }

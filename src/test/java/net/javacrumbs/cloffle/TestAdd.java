@@ -3,13 +3,12 @@ package net.javacrumbs.cloffle;
 import clojure.lang.Keyword;
 import clojure.lang.Numbers;
 import clojure.lang.Symbol;
-import junit.framework.TestCase;
 import org.junit.Test;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class TestAdd extends TestCase {
+public class TestAdd {
 
     @Test
     public void shouldAddTwoNumbers() {
