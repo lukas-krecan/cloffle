@@ -18,26 +18,23 @@ public class E2ETest {
     @Test
     public void shouldAddThreeNumbers() {
         String s = "(clojure.tools.analyzer.jvm/analyze '(+ 1 2 3.0))";
-        Map<Keyword, Object> result = eval(s);
-        ClojureNode node = astBuilder.build(result);
+        ClojureNode node = astBuilder.build(eval(s));
         assertThat(interpreter.interpret(node)).isEqualTo(6d);
     }
 
     @Test
-    public void shouldInterpetIf() {
+    public void shouldInterpretIf() {
         String s = "(clojure.tools.analyzer.jvm/analyze '(if true 2.0 3.0))";
-        Map<Keyword, Object> result = eval(s);
-        ClojureNode node = astBuilder.build(result);
+        ClojureNode node = astBuilder.build(eval(s));
         assertThat(interpreter.interpret(node)).isEqualTo(2.0);
     }
 
     @Test
-      public void shouldInterpetNil() {
-          String s = "(clojure.tools.analyzer.jvm/analyze '(if nil 2.0 3.0))";
-          Map<Keyword, Object> result = eval(s);
-          ClojureNode node = astBuilder.build(result);
-          assertThat(interpreter.interpret(node)).isEqualTo(3.0);
-      }
+    public void shouldInterpretNil() {
+        String s = "(clojure.tools.analyzer.jvm/analyze '(if nil 2.0 3.0))";
+        ClojureNode node = astBuilder.build(eval(s));
+        assertThat(interpreter.interpret(node)).isEqualTo(3.0);
+    }
 
     @SuppressWarnings("unchecked")
     private Map<Keyword, Object> eval(String s) {

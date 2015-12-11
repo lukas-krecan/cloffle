@@ -22,7 +22,9 @@ import java.lang.reflect.Method;
 
 public class ClojureStaticCall extends ClojureNode {
     private final Method targetMethod;
+    @Child
     private ClojureNode arg1;
+    @Child
     private ClojureNode arg2;
 
     public ClojureStaticCall(Method targetMethod, ClojureNode arg1, ClojureNode arg2) {

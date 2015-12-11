@@ -21,8 +21,11 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 public class ClojureIf extends ClojureNode {
+    @Child
     private ClojureNode condition;
+    @Child
     private ClojureNode thenNode;
+    @Child
     private ClojureNode elseNode;
 
     public ClojureIf(ClojureNode condition, ClojureNode thenNode, ClojureNode elseNode) {
