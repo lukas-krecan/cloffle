@@ -15,8 +15,16 @@
  */
 package net.javacrumbs.cloffle;
 
-import com.oracle.truffle.api.dsl.TypeSystem;
+import com.oracle.truffle.api.frame.VirtualFrame;
 
-@TypeSystem({boolean.class, long.class, double.class, ClojureStaticCall.class})
-public abstract class ClojureTypes {
+public class ClojureDoubleNode extends ClojureNode {
+    private final double value;
+
+    protected ClojureDoubleNode(double value) {
+        this.value = value;
+    }
+
+    public Object execute(VirtualFrame virtualFrame) {
+        return value;
+    }
 }
