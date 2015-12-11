@@ -15,23 +15,8 @@
  */
 package net.javacrumbs.cloffle;
 
-import clojure.lang.Keyword;
-import mikera.cljutils.Clojure;
+import com.oracle.truffle.api.dsl.TypeSystem;
 
-import java.util.Map;
-
-public class Main {
-
-    static {
-        Clojure.require("clojure.tools.analyzer.jvm");
-    }
-
-
-    public static void main(String[] args) {
-        String s = "(clojure.tools.analyzer.jvm/analyze '(+ 1 2))";
-        System.out.println("Evaluating Clojure code: " + s);
-        Object result = Clojure.eval(s);
-        System.out.println("=> " + result);
-        ((Map) result).get(Keyword.intern("children"));
-    }
+@TypeSystem({long.class, double.class, ClojureStaticCall.class})
+public abstract class ClojureTypes {
 }

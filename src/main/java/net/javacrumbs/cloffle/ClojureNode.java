@@ -15,23 +15,10 @@
  */
 package net.javacrumbs.cloffle;
 
-import clojure.lang.Keyword;
-import mikera.cljutils.Clojure;
+import com.oracle.truffle.api.nodes.Node;
+import com.oracle.truffle.api.nodes.NodeInfo;
 
-import java.util.Map;
+@NodeInfo(language = "Clojure in Truffle")
+public class ClojureNode extends Node {
 
-public class Main {
-
-    static {
-        Clojure.require("clojure.tools.analyzer.jvm");
-    }
-
-
-    public static void main(String[] args) {
-        String s = "(clojure.tools.analyzer.jvm/analyze '(+ 1 2))";
-        System.out.println("Evaluating Clojure code: " + s);
-        Object result = Clojure.eval(s);
-        System.out.println("=> " + result);
-        ((Map) result).get(Keyword.intern("children"));
-    }
 }
