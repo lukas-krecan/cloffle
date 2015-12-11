@@ -9,11 +9,18 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class InterpreterTest {
     private final Interpreter interpreter = new Interpreter();
+
     @Test
-    public void shouldExecuteTheCode() throws NoSuchMethodException {
+    public void shouldAddTwoNumbers() throws NoSuchMethodException {
         Method method = Numbers.class.getMethod("add", long.class, long.class);
-        ClojureNode[] args = new ClojureNode[]{new ClojureNumberNode(1), new ClojureNumberNode(2)};
-        assertThat(interpreter.interpret(new ClojureStaticCall(method, args))).isEqualTo(3L);
+        assertThat(interpreter.interpret(new ClojureStaticCall(method, new ClojureLongNode(1), new ClojureLongNode(2)))).isEqualTo(3L);
+    }
+
+    @Test
+    public void shouldAddThreeNumbers() throws NoSuchMethodException {
+        Method method = Numbers.class.getMethod("add", long.class, long.class);
+        ClojureStaticCall addFirstTwo = new ClojureStaticCall(method, new ClojureLongNode(1), new ClojureLongNode(2));
+        assertThat(interpreter.interpret(new ClojureStaticCall(method, addFirstTwo, new ClojureLongNode(3)))).isEqualTo(6L);
     }
 
 }

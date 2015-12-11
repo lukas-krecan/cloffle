@@ -15,35 +15,28 @@
  */
 package net.javacrumbs.cloffle;
 
-import com.oracle.truffle.api.CompilerAsserts;
 import com.oracle.truffle.api.frame.VirtualFrame;
-import com.oracle.truffle.api.nodes.ExplodeLoop;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 public class ClojureStaticCall extends ClojureNode {
     private final Method targetMethod;
-    private final ClojureNode[] args;
+    private ClojureNode arg1;
+    private ClojureNode arg2;
 
-    public ClojureStaticCall(Method targetMethod, ClojureNode[] args) {
+    public ClojureStaticCall(Method targetMethod, ClojureNode arg1, ClojureNode arg2) {
         this.targetMethod = targetMethod;
-        this.args = args;
+        this.arg1 = arg1;
+        this.arg2 = arg2;
     }
 
     @Override
-    @ExplodeLoop
     public Object execute(VirtualFrame virtualFrame) {
-        //FIXME: get rid of reflection
-        //FIXME: loop unroll
-        CompilerAsserts.compilationConstant(args.length);
-        Object[] argValues = new Object[args.length]; // has to be here, variable get may be different every time
-        for (int i = 0; i< args.length; i++) {
-            argValues[i] = args[i].execute(virtualFrame);
-        }
-
+        Object arg1Value = arg1.execute(virtualFrame);
+        Object arg2Value = arg2.execute(virtualFrame);
         try {
-            return targetMethod.invoke(null, argValues);
+            return targetMethod.invoke(null, arg1Value, arg2Value);
         } catch (IllegalAccessException | InvocationTargetException e) {
             // FIXME
             throw new IllegalStateException(e);

@@ -18,10 +18,10 @@ package net.javacrumbs.cloffle;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.nodes.Node;
 
-public class ClojureNumberNode extends ClojureNode {
+public class ClojureLongNode extends ClojureNode {
     private final long value;
 
-    protected ClojureNumberNode(long value) {
+    protected ClojureLongNode(long value) {
         this.value = value;
     }
 

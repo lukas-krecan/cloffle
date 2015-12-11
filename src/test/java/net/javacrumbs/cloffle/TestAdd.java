@@ -16,8 +16,6 @@ public class TestAdd {
         tree.put(kw("op"), kw("static-call"));
         tree.put(kw("class"), Numbers.class);
         tree.put(kw("method"), Symbol.intern("add"));
-
-
     }
 
     private Keyword kw(String nsname) {

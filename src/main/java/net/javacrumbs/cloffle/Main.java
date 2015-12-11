@@ -28,7 +28,7 @@ public class Main {
 
 
     public static void main(String[] args) {
-        String s = "(clojure.tools.analyzer.jvm/analyze '(+ 1 2))";
+        String s = "(clojure.tools.analyzer.jvm/analyze '(+ 1 2 3))";
         System.out.println("Evaluating Clojure code: " + s);
         Object result = Clojure.eval(s);
         System.out.println("=> " + result);
