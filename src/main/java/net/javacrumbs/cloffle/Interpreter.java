@@ -15,12 +15,16 @@
  */
 package net.javacrumbs.cloffle;
 
-import com.oracle.truffle.api.frame.VirtualFrame;
-import com.oracle.truffle.api.nodes.Node;
-import com.oracle.truffle.api.nodes.NodeInfo;
+import com.oracle.truffle.api.RootCallTarget;
+import com.oracle.truffle.api.Truffle;
+import com.oracle.truffle.api.frame.FrameDescriptor;
 
-@NodeInfo(language = "Clojure in Truffle")
-public abstract class ClojureNode extends Node {
-    public abstract Object execute(VirtualFrame virtualFrame);
+public class Interpreter {
 
+    public Object interpret(ClojureNode[] bodyNodes) {
+        FrameDescriptor frameDescriptor = new FrameDescriptor();
+        RootCallTarget callTarget = Truffle.getRuntime().createCallTarget(ClojureRootNode.create(bodyNodes, frameDescriptor));
+        callTarget.call();
+        return null;
+    }
 }
