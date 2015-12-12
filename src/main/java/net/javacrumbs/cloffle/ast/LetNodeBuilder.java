@@ -16,12 +16,21 @@
 package net.javacrumbs.cloffle.ast;
 
 import clojure.lang.Keyword;
+import net.javacrumbs.cloffle.nodes.BindingNode;
 import net.javacrumbs.cloffle.nodes.ClojureNode;
+import net.javacrumbs.cloffle.nodes.LetNode;
 
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
+
+import static java.util.stream.Collectors.toList;
 
 public class LetNodeBuilder extends AbstractNodeBuilder {
     private static final Keyword LET = Keyword.find("let");
+    private static final Keyword BINDINGS = Keyword.find("bindings");
+    private static final Keyword BODY = Keyword.find("body");
 
     protected LetNodeBuilder(AstBuilder astBuilder) {
         super(LET, astBuilder);
@@ -29,6 +38,9 @@ public class LetNodeBuilder extends AbstractNodeBuilder {
 
     @Override
     public ClojureNode buildNode(Map<Keyword, Object> tree) {
-        return null;
+        List<Object> bindings = (List<Object>) tree.get(BINDINGS);
+        ClojureNode[] bindingNodes = bindings.stream().map(this::build).toArray(ClojureNode[]::new);
+        ClojureNode body =  build(tree.get(BODY));
+        return new LetNode(bindingNodes, body);
     }
 }

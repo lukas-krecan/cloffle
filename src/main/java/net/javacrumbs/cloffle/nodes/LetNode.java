@@ -17,23 +17,24 @@ package net.javacrumbs.cloffle.nodes;
 
 import com.oracle.truffle.api.frame.VirtualFrame;
 
-import java.util.List;
-
 public class LetNode extends ClojureNode {
 
-    @Children
-    private List<BindingNode> bindings;
+    @Children // should be of type BindingNode
+    private final ClojureNode[] bindings;
 
     @Child
     private ClojureNode body;
 
-    public LetNode(List<BindingNode> bindings, ClojureNode body) {
+    public LetNode(ClojureNode[] bindings, ClojureNode body) {
         this.bindings = bindings;
         this.body = body;
     }
 
     @Override
     public Object execute(VirtualFrame virtualFrame) {
-        return null;
+        for (ClojureNode binding: bindings) {
+            binding.execute(virtualFrame);
+        }
+        return body.execute(virtualFrame);
     }
 }

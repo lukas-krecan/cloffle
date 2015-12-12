@@ -15,25 +15,27 @@
  */
 package net.javacrumbs.cloffle.nodes;
 
+import clojure.lang.Symbol;
 import com.oracle.truffle.api.frame.VirtualFrame;
 
+// FIXME: Is it really a node?
 public class BindingNode extends ClojureNode {
-    private final String name;
+    private final Symbol name;
+    private final Class<?> type;
 
     @Child
     private ClojureNode init;
 
-    public BindingNode(String name, ClojureNode init) {
+    public BindingNode(Symbol name, ClojureNode init, Class<?> type) {
         this.name = name;
         this.init = init;
-    }
-
-    public String getName() {
-        return name;
+        this.type = type;
     }
 
     @Override
     public Object execute(VirtualFrame virtualFrame) {
-        return init.execute(virtualFrame);
+        virtualFrame.setObject(virtualFrame.getFrameDescriptor().addFrameSlot(name), init.execute(virtualFrame));
+        // strange
+        return null;
     }
 }

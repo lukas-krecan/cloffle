@@ -30,6 +30,7 @@ public class AstBuilder {
         new IfNodeBuilder(this),
         new StaticCodeNodeBuilder(this),
         new BindingNodeBuilder(this),
+        new LocalNodeBuilder(this),
         new LetNodeBuilder(this)
     );
 

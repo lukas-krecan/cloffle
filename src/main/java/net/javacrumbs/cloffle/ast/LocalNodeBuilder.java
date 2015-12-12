@@ -19,23 +19,22 @@ import clojure.lang.Keyword;
 import clojure.lang.Symbol;
 import net.javacrumbs.cloffle.nodes.BindingNode;
 import net.javacrumbs.cloffle.nodes.ClojureNode;
+import net.javacrumbs.cloffle.nodes.LocalNode;
 
 import java.util.Map;
 
-public class BindingNodeBuilder extends AbstractNodeBuilder {
-    private static final Keyword BINDING = Keyword.find("binding");
-    public static final Keyword NAME = Keyword.find("name");
-    private static final Keyword INIT = Keyword.find("init");
+public class LocalNodeBuilder extends AbstractNodeBuilder {
+    private static final Keyword LOCAL = Keyword.find("local");
+    private static final Keyword NAME = Keyword.find("name");
 
-    protected BindingNodeBuilder(AstBuilder astBuilder) {
-        super(BINDING, astBuilder);
+    protected LocalNodeBuilder(AstBuilder astBuilder) {
+        super(LOCAL, astBuilder);
     }
 
     @Override
     public ClojureNode buildNode(Map<Keyword, Object> tree) {
         Symbol name = (Symbol) tree.get(NAME);
         Class<?> type = (Class<?>) tree.get(TAG);
-        ClojureNode init = build(tree.get(INIT));
-        return new BindingNode(name, init, type);
+        return new LocalNode(name, type);
     }
 }
