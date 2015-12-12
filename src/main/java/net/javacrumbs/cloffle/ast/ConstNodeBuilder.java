@@ -25,7 +25,7 @@ import net.javacrumbs.cloffle.nodes.ClojureNode;
 import java.util.Map;
 
 public class ConstNodeBuilder extends AbstractNodeBuilder {
-    private static final Keyword CONST = Keyword.find("const");
+    private static final Keyword CONST = keyword("const");
 
     protected ConstNodeBuilder(AstBuilder astBuilder) {
         super(CONST, astBuilder);
@@ -34,7 +34,7 @@ public class ConstNodeBuilder extends AbstractNodeBuilder {
     @Override
     public ClojureNode buildNode(Map<Keyword, Object> tree) {
         Class<?> tag = (Class<?>) tree.get(TAG);
-        if (long.class.equals(tag)) {
+        if (long.class.equals(tag) || Long.class.equals(tag)) {
             return new ClojureLongNode((Long) tree.get(VAL));
         }
         if (double.class.equals(tag)) {

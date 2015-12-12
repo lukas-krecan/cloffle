@@ -15,26 +15,28 @@
  */
 package net.javacrumbs.cloffle.nodes;
 
+import com.oracle.truffle.api.Truffle;
 import com.oracle.truffle.api.frame.VirtualFrame;
 
-public class LetNode extends ClojureNode {
-
-    @Children // should be of type BindingNode
-    private final BindingNode[] bindings;
-
+public class InvokeNode extends ClojureNode {
     @Child
-    private ClojureNode body;
+    private FnNode method;
 
-    public LetNode(BindingNode[] bindings, ClojureNode body) {
-        this.bindings = bindings;
-        this.body = body;
+    @Children
+    private final ClojureNode[] args;
+
+    public InvokeNode(FnNode method, ClojureNode[] args) {
+        this.method = method;
+        this.args = args;
     }
 
     @Override
     public Object execute(VirtualFrame virtualFrame) {
-        for (ClojureNode binding: bindings) {
-            binding.execute(virtualFrame);
+        Object[] resolvedArgs = new Object[args.length];
+        for (int i = 0; i < args.length; i++) {
+            resolvedArgs[i] = args[i].execute(virtualFrame);
         }
-        return body.execute(virtualFrame);
+        VirtualFrame newVirtualFrame = Truffle.getRuntime().createVirtualFrame(resolvedArgs, virtualFrame.getFrameDescriptor());
+        return method.execute(newVirtualFrame);
     }
 }

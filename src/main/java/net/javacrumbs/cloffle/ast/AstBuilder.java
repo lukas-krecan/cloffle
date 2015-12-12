@@ -20,6 +20,7 @@ import net.javacrumbs.cloffle.nodes.ClojureNode;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import static java.util.Arrays.asList;
 
@@ -32,12 +33,15 @@ public class AstBuilder {
         new BindingNodeBuilder(this),
         new LocalNodeBuilder(this),
         new DoNodeBuilder(this),
+        new FnMethodNodeBuilder(this),
+        new FnNodeBuilder(this),
+        new InvokeNodeBuilder(this),
         new LetNodeBuilder(this)
     );
 
 
     public ClojureNode build(Object node) {
-        Map<Keyword, Object> tree = (Map<Keyword, Object>) node;
+        Map<Keyword, Object> tree = (Map<Keyword, Object>) Objects.requireNonNull(node);
         return builders.stream()
             .filter(b -> b.supports(tree))
             .findFirst().map(b -> b.buildNode(tree))

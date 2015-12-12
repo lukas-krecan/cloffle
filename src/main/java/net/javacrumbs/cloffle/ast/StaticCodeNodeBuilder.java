@@ -25,9 +25,9 @@ import java.util.List;
 import java.util.Map;
 
 public class StaticCodeNodeBuilder extends AbstractNodeBuilder {
-    private static final Keyword STATIC_CALL = Keyword.find("static-call");
-    private static final Keyword CLASS = Keyword.find("class");
-    private static final Keyword METHOD = Keyword.find("method");
+    private static final Keyword STATIC_CALL = keyword("static-call");
+    private static final Keyword CLASS = keyword("class");
+    private static final Keyword METHOD = keyword("method");
 
     protected StaticCodeNodeBuilder(AstBuilder astBuilder) {
         super(STATIC_CALL, astBuilder);
@@ -37,8 +37,8 @@ public class StaticCodeNodeBuilder extends AbstractNodeBuilder {
     public ClojureNode buildNode(Map<Keyword, Object> tree) {
         Class<?> clazz = (Class<?>) tree.get(CLASS);
         Symbol methodName = (Symbol) tree.get(METHOD);
-        Class<?> tag = (Class<?>) tree.get(TAG);
-        List<Map<Keyword, Object>> args = (List<Map<Keyword, Object>>) tree.get(Keyword.find("args"));
+        List<Map<Keyword, Object>> args = (List<Map<Keyword, Object>>) tree.get(keyword("args"));
+        // assert length
         try {
             Method method = clazz.getMethod(methodName.getName(), Object.class, Object.class);
             return new ClojureStaticCallNode(method, build(args.get(0)), build(args.get(1)));

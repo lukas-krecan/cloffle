@@ -24,8 +24,8 @@ import net.javacrumbs.cloffle.nodes.LocalNode;
 import java.util.Map;
 
 public class LocalNodeBuilder extends AbstractNodeBuilder {
-    private static final Keyword LOCAL = Keyword.find("local");
-    private static final Keyword NAME = Keyword.find("name");
+    private static final Keyword LOCAL = keyword("local");
+    private static final Keyword NAME = keyword("name");
 
     protected LocalNodeBuilder(AstBuilder astBuilder) {
         super(LOCAL, astBuilder);

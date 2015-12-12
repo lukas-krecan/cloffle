@@ -18,17 +18,20 @@ package net.javacrumbs.cloffle.ast;
 import clojure.lang.Keyword;
 import net.javacrumbs.cloffle.nodes.ClojureNode;
 
+import java.util.List;
 import java.util.Map;
+import java.util.function.IntFunction;
 
 /**
- *  Analyzes one node in tree.
+ * Analyzes one node in tree.
  */
 abstract class AbstractNodeBuilder {
-    private static final Keyword OP = Keyword.find("op");
-    protected static final Keyword TAG = Keyword.find("tag");
-    protected static final Keyword TYPE = Keyword.find("type");
-    protected static final Keyword NIL = Keyword.find("nil");
-    protected static final Keyword VAL = Keyword.find("val");
+
+    private static final Keyword OP = keyword("op");
+    protected static final Keyword TAG = keyword("tag");
+    protected static final Keyword TYPE = keyword("type");
+    protected static final Keyword NIL = keyword("nil");
+    protected static final Keyword VAL = keyword("val");
 
 
     private final Keyword supportedOperation;
@@ -48,5 +51,22 @@ abstract class AbstractNodeBuilder {
         return astBuilder.build(node);
     }
 
+    public ClojureNode buildOptional(Object node) {
+        if (node != null) {
+            return astBuilder.build(node);
+        } else {
+            return null;
+        }
+      }
+
     public abstract ClojureNode buildNode(Map<Keyword, Object> node);
+
+    protected <T> T[] convertToNodes(Object value, IntFunction<T[]> supplier) {
+        List<Object> args = (List<Object>) value;
+        return args.stream().map(this::build).toArray(supplier);
+    }
+
+    protected static Keyword keyword(String nsname) {
+        return Keyword.intern(nsname);
+    }
 }

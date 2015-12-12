@@ -28,9 +28,9 @@ import java.util.stream.StreamSupport;
 import static java.util.stream.Collectors.toList;
 
 public class LetNodeBuilder extends AbstractNodeBuilder {
-    private static final Keyword LET = Keyword.find("let");
-    private static final Keyword BINDINGS = Keyword.find("bindings");
-    private static final Keyword BODY = Keyword.find("body");
+    private static final Keyword LET = keyword("let");
+    private static final Keyword BINDINGS = keyword("bindings");
+    private static final Keyword BODY = keyword("body");
 
     protected LetNodeBuilder(AstBuilder astBuilder) {
         super(LET, astBuilder);
@@ -38,9 +38,8 @@ public class LetNodeBuilder extends AbstractNodeBuilder {
 
     @Override
     public ClojureNode buildNode(Map<Keyword, Object> tree) {
-        List<Object> bindings = (List<Object>) tree.get(BINDINGS);
-        ClojureNode[] bindingNodes = bindings.stream().map(this::build).toArray(ClojureNode[]::new);
+        BindingNode[] bindings = convertToNodes(tree.get(BINDINGS), BindingNode[]::new);
         ClojureNode body =  build(tree.get(BODY));
-        return new LetNode(bindingNodes, body);
+        return new LetNode(bindings, body);
     }
 }

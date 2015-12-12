@@ -16,23 +16,25 @@
 package net.javacrumbs.cloffle.ast;
 
 import clojure.lang.Keyword;
-import net.javacrumbs.cloffle.nodes.ClojureIfNode;
 import net.javacrumbs.cloffle.nodes.ClojureNode;
+import net.javacrumbs.cloffle.nodes.FnNode;
+import net.javacrumbs.cloffle.nodes.InvokeNode;
 
 import java.util.Map;
 
-public class IfNodeBuilder extends AbstractNodeBuilder {
-    private static final Keyword IF = keyword("if");
-    private static final Keyword TEST = keyword("test");
-    private static final Keyword THEN = keyword("then");
-    private static final Keyword ELSE = keyword("else");
+public class InvokeNodeBuilder extends AbstractNodeBuilder {
+    private static final Keyword INVOKE = keyword("invoke");
+    private static final Keyword FN = keyword("fn");
+    private static final Keyword ARGS = keyword("args");
 
-    protected IfNodeBuilder(AstBuilder astBuilder) {
-        super(IF, astBuilder);
+    protected InvokeNodeBuilder(AstBuilder astBuilder) {
+        super(INVOKE, astBuilder);
     }
 
     @Override
     public ClojureNode buildNode(Map<Keyword, Object> tree) {
-        return new ClojureIfNode(build(tree.get(TEST)), build(tree.get(THEN)), build(tree.get(ELSE)));
+        ClojureNode fn = build(tree.get(FN));
+        ClojureNode[] args = convertToNodes(tree.get(ARGS), ClojureNode[]::new);
+        return new InvokeNode((FnNode) fn, args);
     }
 }

@@ -13,25 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.javacrumbs.cloffle;
+package net.javacrumbs.cloffle.nodes;
 
-import clojure.lang.Keyword;
-import mikera.cljutils.Clojure;
+import com.oracle.truffle.api.frame.VirtualFrame;
 
-import java.util.Map;
+public class FnNode extends ClojureNode {
 
-public class Main {
+    @Children
+    private final FnMethodNode[] fnMethodNodes;
 
-    static {
-        Clojure.require("clojure.tools.analyzer.jvm");
+    public FnNode(FnMethodNode[] fnMethodNodes) {
+        this.fnMethodNodes = fnMethodNodes;
     }
 
-
-    public static void main(String[] args) {
-        String s = "(clojure.tools.analyzer.jvm/analyze '(+ 1 2.0))";
-        System.out.println("Evaluating Clojure code: " + s);
-        Object result = Clojure.eval(s);
-        System.out.println("=> " + result);
-        System.out.println(((Map) result).get(Keyword.intern("children")));
+    @Override
+    public Object execute(VirtualFrame virtualFrame) {
+        // FIXME
+        return fnMethodNodes[0].execute(virtualFrame);
     }
 }

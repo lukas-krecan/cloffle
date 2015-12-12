@@ -17,15 +17,16 @@ package net.javacrumbs.cloffle.ast;
 
 import clojure.lang.Keyword;
 import net.javacrumbs.cloffle.nodes.ClojureNode;
+import net.javacrumbs.cloffle.nodes.DoNode;
 import net.javacrumbs.cloffle.nodes.LetNode;
 
 import java.util.List;
 import java.util.Map;
 
 public class DoNodeBuilder extends AbstractNodeBuilder {
-    private static final Keyword DO = Keyword.find("do");
-    private static final Keyword STATEMENTS = Keyword.find("statements");
-    private static final Keyword RET = Keyword.find("ret");
+    private static final Keyword DO = keyword("do");
+    private static final Keyword STATEMENTS = keyword("statements");
+    private static final Keyword RET = keyword("ret");
 
     protected DoNodeBuilder(AstBuilder astBuilder) {
         super(DO, astBuilder);
@@ -33,9 +34,8 @@ public class DoNodeBuilder extends AbstractNodeBuilder {
 
     @Override
     public ClojureNode buildNode(Map<Keyword, Object> tree) {
-        List<Object> statements = (List<Object>) tree.get(STATEMENTS);
-        ClojureNode[] statementNodes = statements.stream().map(this::build).toArray(ClojureNode[]::new);
+        ClojureNode[] statements = convertToNodes(tree.get(STATEMENTS), ClojureNode[]::new);
         ClojureNode body =  build(tree.get(RET));
-        return new LetNode(statementNodes, body);
+        return new DoNode(statements, body);
     }
 }

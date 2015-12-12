@@ -16,23 +16,25 @@
 package net.javacrumbs.cloffle.ast;
 
 import clojure.lang.Keyword;
-import net.javacrumbs.cloffle.nodes.ClojureIfNode;
+import net.javacrumbs.cloffle.nodes.BindingNode;
 import net.javacrumbs.cloffle.nodes.ClojureNode;
+import net.javacrumbs.cloffle.nodes.FnMethodNode;
+import net.javacrumbs.cloffle.nodes.FnNode;
 
+import java.util.List;
 import java.util.Map;
 
-public class IfNodeBuilder extends AbstractNodeBuilder {
-    private static final Keyword IF = keyword("if");
-    private static final Keyword TEST = keyword("test");
-    private static final Keyword THEN = keyword("then");
-    private static final Keyword ELSE = keyword("else");
+public class FnNodeBuilder extends AbstractNodeBuilder {
+    private static final Keyword FN_METHOD = keyword("fn");
+    private static final Keyword METHODS = keyword("methods");
 
-    protected IfNodeBuilder(AstBuilder astBuilder) {
-        super(IF, astBuilder);
+    protected FnNodeBuilder(AstBuilder astBuilder) {
+        super(FN_METHOD, astBuilder);
     }
 
     @Override
     public ClojureNode buildNode(Map<Keyword, Object> tree) {
-        return new ClojureIfNode(build(tree.get(TEST)), build(tree.get(THEN)), build(tree.get(ELSE)));
+        FnMethodNode[] fnMethods = convertToNodes(tree.get(METHODS), FnMethodNode[]::new);
+        return new FnNode(fnMethods);
     }
 }

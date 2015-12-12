@@ -15,27 +15,41 @@
  */
 package net.javacrumbs.cloffle.nodes;
 
+import clojure.lang.Keyword;
 import clojure.lang.Symbol;
 import com.oracle.truffle.api.frame.VirtualFrame;
 
 // FIXME: Is it really a node?
 public class BindingNode extends ClojureNode {
+    public static final Keyword ARG = Keyword.find("arg");
     private final Symbol name;
-    private final Class<?> type;
+    private final Keyword local;
+    private final Long argId;
 
     @Child
     private ClojureNode init;
 
-    public BindingNode(Symbol name, ClojureNode init, Class<?> type) {
+    public BindingNode(Symbol name, ClojureNode init, Keyword local, Long argId) {
         this.name = name;
         this.init = init;
-        this.type = type;
+        this.local = local;
+        this.argId = argId;
     }
 
     @Override
     public Object execute(VirtualFrame virtualFrame) {
-        virtualFrame.setObject(virtualFrame.getFrameDescriptor().addFrameSlot(name), init.execute(virtualFrame));
+        if (init != null) {
+            doSetValue(virtualFrame, init.execute(virtualFrame));
+        } else if (ARG.equals(local)) {
+            doSetValue(virtualFrame, virtualFrame.getArguments()[argId.intValue()]);
+        } else{
+            throw new UnsupportedOperationException();
+        }
         // strange
         return null;
+    }
+
+    private void doSetValue(VirtualFrame virtualFrame, Object value) {
+        virtualFrame.setObject(virtualFrame.getFrameDescriptor().addFrameSlot(name), value);
     }
 }
