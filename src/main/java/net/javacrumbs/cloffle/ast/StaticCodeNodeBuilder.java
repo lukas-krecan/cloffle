@@ -40,7 +40,7 @@ public class StaticCodeNodeBuilder extends AbstractNodeBuilder {
         Class<?> tag = (Class<?>) tree.get(TAG);
         List<Map<Keyword, Object>> args = (List<Map<Keyword, Object>>) tree.get(Keyword.find("args"));
         try {
-            Method method = clazz.getMethod(methodName.getName(), tag, tag);
+            Method method = clazz.getMethod(methodName.getName(), Object.class, Object.class);
             return new ClojureStaticCallNode(method, build(args.get(0)), build(args.get(1)));
         } catch (NoSuchMethodException e) {
             throw new AstBuildException(e);

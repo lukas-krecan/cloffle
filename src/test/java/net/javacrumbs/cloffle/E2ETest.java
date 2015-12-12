@@ -45,6 +45,20 @@ public class E2ETest {
         assertThat(interpreter.interpret(node)).isEqualTo(8.0);
     }
 
+    @Test
+    public void shouldInterpretLetNested() {
+        String s = "(clojure.tools.analyzer.jvm/analyze '(let [a 3.0] (let [a  4] (+ a 5))))";
+        ClojureNode node = astBuilder.build(eval(s));
+        assertThat(interpreter.interpret(node)).isEqualTo(9L);
+    }
+
+    @Test
+    public void doShouldWork() {
+        String s = "(clojure.tools.analyzer.jvm/analyze '(do (let [a 3.0] (+ a 5)) (let [a 1] (+ a 5))))";
+        ClojureNode node = astBuilder.build(eval(s));
+        assertThat(interpreter.interpret(node)).isEqualTo(6L);
+    }
+
     @SuppressWarnings("unchecked")
     private Map<Keyword, Object> eval(String s) {
         return (Map<Keyword, Object>) mikera.cljutils.Clojure.eval(s);

@@ -17,31 +17,25 @@ package net.javacrumbs.cloffle.ast;
 
 import clojure.lang.Keyword;
 import net.javacrumbs.cloffle.nodes.ClojureNode;
+import net.javacrumbs.cloffle.nodes.LetNode;
 
 import java.util.List;
 import java.util.Map;
 
-import static java.util.Arrays.asList;
+public class DoNodeBuilder extends AbstractNodeBuilder {
+    private static final Keyword DO = Keyword.find("do");
+    private static final Keyword STATEMENTS = Keyword.find("statements");
+    private static final Keyword RET = Keyword.find("ret");
 
-public class AstBuilder {
-
-    private final List<AbstractNodeBuilder> builders = asList(
-        new ConstNodeBuilder(this),
-        new IfNodeBuilder(this),
-        new StaticCodeNodeBuilder(this),
-        new BindingNodeBuilder(this),
-        new LocalNodeBuilder(this),
-        new DoNodeBuilder(this),
-        new LetNodeBuilder(this)
-    );
-
-
-    public ClojureNode build(Object node) {
-        Map<Keyword, Object> tree = (Map<Keyword, Object>) node;
-        return builders.stream()
-            .filter(b -> b.supports(tree))
-            .findFirst().map(b -> b.buildNode(tree))
-            .orElseThrow(() -> new AstBuildException("Unsupported operation " + tree));
+    protected DoNodeBuilder(AstBuilder astBuilder) {
+        super(DO, astBuilder);
     }
 
+    @Override
+    public ClojureNode buildNode(Map<Keyword, Object> tree) {
+        List<Object> statements = (List<Object>) tree.get(STATEMENTS);
+        ClojureNode[] statementNodes = statements.stream().map(this::build).toArray(ClojureNode[]::new);
+        ClojureNode body =  build(tree.get(RET));
+        return new LetNode(statementNodes, body);
+    }
 }
