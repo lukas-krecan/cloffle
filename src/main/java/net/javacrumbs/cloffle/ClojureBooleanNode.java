@@ -22,7 +22,7 @@ public class ClojureBooleanNode extends ClojureNode {
     // FIXME; static instances
     private final boolean value;
 
-    protected ClojureBooleanNode(boolean value) {
+    public ClojureBooleanNode(boolean value) {
         this.value = value;
     }
 

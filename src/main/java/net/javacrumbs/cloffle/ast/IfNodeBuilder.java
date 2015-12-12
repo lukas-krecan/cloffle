@@ -13,25 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.javacrumbs.cloffle;
+package net.javacrumbs.cloffle.ast;
 
 import clojure.lang.Keyword;
-import mikera.cljutils.Clojure;
+import net.javacrumbs.cloffle.ClojureIf;
+import net.javacrumbs.cloffle.ClojureNode;
 
 import java.util.Map;
 
-public class Main {
+public class IfNodeBuilder extends AbstractNodeBuilder {
+    private static final Keyword IF = Keyword.find("if");
+    private static final Keyword TEST = Keyword.find("test");
+    private static final Keyword THEN = Keyword.find("then");
+    private static final Keyword ELSE = Keyword.find("else");
 
-    static {
-        Clojure.require("clojure.tools.analyzer.jvm");
+    protected IfNodeBuilder(AstBuilder astBuilder) {
+        super(IF, astBuilder);
     }
 
-
-    public static void main(String[] args) {
-        String s = "(clojure.tools.analyzer.jvm/analyze '(+ 1 2.0))";
-        System.out.println("Evaluating Clojure code: " + s);
-        Object result = Clojure.eval(s);
-        System.out.println("=> " + result);
-        System.out.println(((Map) result).get(Keyword.intern("children")));
+    @Override
+    public ClojureNode buildNode(Map<Keyword, Object> tree) {
+        return new ClojureIf(build(tree.get(TEST)), build(tree.get(THEN)), build(tree.get(ELSE)));
     }
 }

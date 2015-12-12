@@ -34,11 +34,9 @@ public class ClojureIf extends ClojureNode {
         this.elseNode = elseNode;
     }
 
-
     @Override
     public Object execute(VirtualFrame virtualFrame) {
         Object value = condition.execute(virtualFrame);
-        //FIMXE: nil
         if (!Boolean.FALSE.equals(value) && value != null) {
             return thenNode.execute(virtualFrame);
         } else {

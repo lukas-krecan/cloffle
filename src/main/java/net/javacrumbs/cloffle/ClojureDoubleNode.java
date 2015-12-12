@@ -20,7 +20,7 @@ import com.oracle.truffle.api.frame.VirtualFrame;
 public class ClojureDoubleNode extends ClojureNode {
     private final double value;
 
-    protected ClojureDoubleNode(double value) {
+    public ClojureDoubleNode(double value) {
         this.value = value;
     }
 

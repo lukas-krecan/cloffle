@@ -1,6 +1,7 @@
 package net.javacrumbs.cloffle;
 
 import clojure.lang.Keyword;
+import net.javacrumbs.cloffle.ast.AstBuilder;
 import org.junit.Test;
 
 import java.util.Map;
@@ -35,6 +36,13 @@ public class E2ETest {
         ClojureNode node = astBuilder.build(eval(s));
         assertThat(interpreter.interpret(node)).isEqualTo(3.0);
     }
+
+//    @Test
+//    public void shouldInterpretDef() {
+//        String s = "(clojure.tools.analyzer.jvm/analyze '((def my-val 5.0) (+ my-val 3)))";
+//        ClojureNode node = astBuilder.build(eval(s));
+//        assertThat(interpreter.interpret(node)).isEqualTo(8.0);
+//    }
 
     @SuppressWarnings("unchecked")
     private Map<Keyword, Object> eval(String s) {

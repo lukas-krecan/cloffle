@@ -13,19 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.javacrumbs.cloffle;
+package net.javacrumbs.cloffle.ast;
 
-import com.oracle.truffle.api.frame.VirtualFrame;
-import com.oracle.truffle.api.nodes.Node;
-
-public class ClojureLongNode extends ClojureNode {
-    private final long value;
-
-    public ClojureLongNode(long value) {
-        this.value = value;
+class AstBuildException extends RuntimeException {
+    public AstBuildException(Exception e) {
+        super(e);
     }
 
-    public Object execute(VirtualFrame virtualFrame) {
-        return value;
+    public AstBuildException(String message) {
+        super(message);
     }
 }

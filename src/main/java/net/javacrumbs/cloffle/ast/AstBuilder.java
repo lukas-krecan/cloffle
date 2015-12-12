@@ -13,25 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.javacrumbs.cloffle;
+package net.javacrumbs.cloffle.ast;
 
 import clojure.lang.Keyword;
-import mikera.cljutils.Clojure;
+import net.javacrumbs.cloffle.ClojureNode;
 
+import java.util.List;
 import java.util.Map;
 
-public class Main {
+import static java.util.Arrays.asList;
 
-    static {
-        Clojure.require("clojure.tools.analyzer.jvm");
+public class AstBuilder {
+
+    private final List<AbstractNodeBuilder> builders = asList(
+        new ConstNodeBuilder(this),
+        new IfNodeBuilder(this),
+        new StaticCodeNodeBuilder(this)
+    );
+
+
+    public ClojureNode build(Object node) {
+        Map<Keyword, Object> tree = (Map<Keyword, Object>) node;
+        return builders.stream()
+            .filter(b -> b.supports(tree))
+            .findFirst().map(b -> b.buildNode(tree))
+            .orElseThrow(() -> new AstBuildException("Unsupported operation " + tree));
     }
 
-
-    public static void main(String[] args) {
-        String s = "(clojure.tools.analyzer.jvm/analyze '(+ 1 2.0))";
-        System.out.println("Evaluating Clojure code: " + s);
-        Object result = Clojure.eval(s);
-        System.out.println("=> " + result);
-        System.out.println(((Map) result).get(Keyword.intern("children")));
-    }
 }
