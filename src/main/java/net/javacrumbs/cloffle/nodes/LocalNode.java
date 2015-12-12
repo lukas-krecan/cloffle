@@ -13,18 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.javacrumbs.cloffle;
+package net.javacrumbs.cloffle.nodes;
 
 import com.oracle.truffle.api.frame.VirtualFrame;
 
-public class ClojureDoubleNode extends ClojureNode {
-    private final double value;
+public class LocalNode extends ClojureNode {
+    private final String name;
 
-    public ClojureDoubleNode(double value) {
-        this.value = value;
+    public LocalNode(String name) {
+        this.name = name;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    @Override
     public Object execute(VirtualFrame virtualFrame) {
-        return value;
+        return virtualFrame.getValue();
     }
 }

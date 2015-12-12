@@ -16,7 +16,7 @@
 package net.javacrumbs.cloffle.ast;
 
 import clojure.lang.Keyword;
-import net.javacrumbs.cloffle.ClojureNode;
+import net.javacrumbs.cloffle.nodes.ClojureNode;
 
 import java.util.Map;
 

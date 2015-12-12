@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.javacrumbs.cloffle;
+package net.javacrumbs.cloffle.nodes;
 
 import com.oracle.truffle.api.frame.VirtualFrame;
+import com.oracle.truffle.api.nodes.Node;
+import com.oracle.truffle.api.nodes.NodeInfo;
 
-public class ClojureNilNode extends ClojureNode {
+@NodeInfo(language = "Clojure in Truffle")
+public abstract class ClojureNode extends Node {
+    public abstract Object execute(VirtualFrame virtualFrame);
 
-    public Object execute(VirtualFrame virtualFrame) {
-        // FIXME: null is not good
-        return null;
-    }
 }

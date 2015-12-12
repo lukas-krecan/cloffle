@@ -13,21 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.javacrumbs.cloffle;
+package net.javacrumbs.cloffle.nodes;
 
 import com.oracle.truffle.api.frame.VirtualFrame;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-public class ClojureStaticCall extends ClojureNode {
+public class ClojureStaticCallNode extends ClojureNode {
     private final Method targetMethod;
     @Child
     private ClojureNode arg1;
     @Child
     private ClojureNode arg2;
 
-    public ClojureStaticCall(Method targetMethod, ClojureNode arg1, ClojureNode arg2) {
+    public ClojureStaticCallNode(Method targetMethod, ClojureNode arg1, ClojureNode arg2) {
         this.targetMethod = targetMethod;
         this.arg1 = arg1;
         this.arg2 = arg2;

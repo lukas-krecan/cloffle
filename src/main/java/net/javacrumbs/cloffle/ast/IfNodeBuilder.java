@@ -16,8 +16,8 @@
 package net.javacrumbs.cloffle.ast;
 
 import clojure.lang.Keyword;
-import net.javacrumbs.cloffle.ClojureIf;
-import net.javacrumbs.cloffle.ClojureNode;
+import net.javacrumbs.cloffle.nodes.ClojureIfNode;
+import net.javacrumbs.cloffle.nodes.ClojureNode;
 
 import java.util.Map;
 
@@ -33,6 +33,6 @@ public class IfNodeBuilder extends AbstractNodeBuilder {
 
     @Override
     public ClojureNode buildNode(Map<Keyword, Object> tree) {
-        return new ClojureIf(build(tree.get(TEST)), build(tree.get(THEN)), build(tree.get(ELSE)));
+        return new ClojureIfNode(build(tree.get(TEST)), build(tree.get(THEN)), build(tree.get(ELSE)));
     }
 }

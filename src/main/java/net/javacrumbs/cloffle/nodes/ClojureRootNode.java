@@ -13,34 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.javacrumbs.cloffle;
+package net.javacrumbs.cloffle.nodes;
 
+import com.oracle.truffle.api.frame.FrameDescriptor;
 import com.oracle.truffle.api.frame.VirtualFrame;
+import com.oracle.truffle.api.nodes.RootNode;
+import net.javacrumbs.cloffle.Clojure;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+public class ClojureRootNode extends RootNode {
+    @Child
+    private ClojureNode node;
 
-public class ClojureIf extends ClojureNode {
-    @Child
-    private ClojureNode condition;
-    @Child
-    private ClojureNode thenNode;
-    @Child
-    private ClojureNode elseNode;
-
-    public ClojureIf(ClojureNode condition, ClojureNode thenNode, ClojureNode elseNode) {
-        this.condition = condition;
-        this.thenNode = thenNode;
-        this.elseNode = elseNode;
+    public ClojureRootNode(ClojureNode node,
+                           FrameDescriptor frameDescriptor) {
+        super(Clojure.class, null, frameDescriptor);
+        this.node = node;
     }
 
     @Override
     public Object execute(VirtualFrame virtualFrame) {
-        Object value = condition.execute(virtualFrame);
-        if (!Boolean.FALSE.equals(value) && value != null) {
-            return thenNode.execute(virtualFrame);
-        } else {
-            return elseNode.execute(virtualFrame);
-        }
+        return node.execute(virtualFrame);
+    }
+
+    public static ClojureRootNode create(ClojureNode node, FrameDescriptor frameDescriptor) {
+        return new ClojureRootNode(node, frameDescriptor);
     }
 }

@@ -16,30 +16,24 @@
 package net.javacrumbs.cloffle.ast;
 
 import clojure.lang.Keyword;
+import net.javacrumbs.cloffle.nodes.BindingNode;
 import net.javacrumbs.cloffle.nodes.ClojureNode;
 
-import java.util.List;
 import java.util.Map;
 
-import static java.util.Arrays.asList;
+public class BindingNodeBuilder extends AbstractNodeBuilder {
+    private static final Keyword BINDING = Keyword.find("binding");
+    public static final Keyword NAME = Keyword.find("name");
+    private static final Keyword INIT = Keyword.find("init");
 
-public class AstBuilder {
-
-    private final List<AbstractNodeBuilder> builders = asList(
-        new ConstNodeBuilder(this),
-        new IfNodeBuilder(this),
-        new StaticCodeNodeBuilder(this),
-        new BindingNodeBuilder(this),
-        new LetNodeBuilder(this)
-    );
-
-
-    public ClojureNode build(Object node) {
-        Map<Keyword, Object> tree = (Map<Keyword, Object>) node;
-        return builders.stream()
-            .filter(b -> b.supports(tree))
-            .findFirst().map(b -> b.buildNode(tree))
-            .orElseThrow(() -> new AstBuildException("Unsupported operation " + tree));
+    protected BindingNodeBuilder(AstBuilder astBuilder) {
+        super(BINDING, astBuilder);
     }
 
+    @Override
+    public ClojureNode buildNode(Map<Keyword, Object> tree) {
+        String name = (String) tree.get(NAME);
+        ClojureNode init = build(tree.get(INIT));
+        return new BindingNode(name, init);
+    }
 }

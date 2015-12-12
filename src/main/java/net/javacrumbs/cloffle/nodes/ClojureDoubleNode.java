@@ -13,28 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.javacrumbs.cloffle;
+package net.javacrumbs.cloffle.nodes;
 
-import com.oracle.truffle.api.frame.FrameDescriptor;
 import com.oracle.truffle.api.frame.VirtualFrame;
-import com.oracle.truffle.api.nodes.RootNode;
 
-public class ClojureRootNode extends RootNode {
-    @Child
-    private ClojureNode node;
+public class ClojureDoubleNode extends ClojureNode {
+    private final double value;
 
-    public ClojureRootNode(ClojureNode node,
-                           FrameDescriptor frameDescriptor) {
-        super(Clojure.class, null, frameDescriptor);
-        this.node = node;
+    public ClojureDoubleNode(double value) {
+        this.value = value;
     }
 
-    @Override
     public Object execute(VirtualFrame virtualFrame) {
-        return node.execute(virtualFrame);
-    }
-
-    public static ClojureRootNode create(ClojureNode node, FrameDescriptor frameDescriptor) {
-        return new ClojureRootNode(node, frameDescriptor);
+        return value;
     }
 }

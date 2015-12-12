@@ -16,7 +16,8 @@
 package net.javacrumbs.cloffle;
 
 import com.oracle.truffle.api.dsl.TypeSystem;
+import net.javacrumbs.cloffle.nodes.ClojureStaticCallNode;
 
-@TypeSystem({boolean.class, long.class, double.class, ClojureStaticCall.class})
+@TypeSystem({boolean.class, long.class, double.class, ClojureStaticCallNode.class})
 public abstract class ClojureTypes {
 }

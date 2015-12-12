@@ -13,14 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.javacrumbs.cloffle;
+package net.javacrumbs.cloffle.ast;
 
-import com.oracle.truffle.api.frame.VirtualFrame;
-import com.oracle.truffle.api.nodes.Node;
-import com.oracle.truffle.api.nodes.NodeInfo;
+import clojure.lang.Keyword;
+import net.javacrumbs.cloffle.nodes.ClojureNode;
 
-@NodeInfo(language = "Clojure in Truffle")
-public abstract class ClojureNode extends Node {
-    public abstract Object execute(VirtualFrame virtualFrame);
+import java.util.Map;
 
+public class LetNodeBuilder extends AbstractNodeBuilder {
+    private static final Keyword LET = Keyword.find("let");
+
+    protected LetNodeBuilder(AstBuilder astBuilder) {
+        super(LET, astBuilder);
+    }
+
+    @Override
+    public ClojureNode buildNode(Map<Keyword, Object> tree) {
+        return null;
+    }
 }

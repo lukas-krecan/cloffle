@@ -16,11 +16,11 @@
 package net.javacrumbs.cloffle.ast;
 
 import clojure.lang.Keyword;
-import net.javacrumbs.cloffle.ClojureBooleanNode;
-import net.javacrumbs.cloffle.ClojureDoubleNode;
-import net.javacrumbs.cloffle.ClojureLongNode;
-import net.javacrumbs.cloffle.ClojureNilNode;
-import net.javacrumbs.cloffle.ClojureNode;
+import net.javacrumbs.cloffle.nodes.ClojureBooleanNode;
+import net.javacrumbs.cloffle.nodes.ClojureDoubleNode;
+import net.javacrumbs.cloffle.nodes.ClojureLongNode;
+import net.javacrumbs.cloffle.nodes.ClojureNilNode;
+import net.javacrumbs.cloffle.nodes.ClojureNode;
 
 import java.util.Map;
 

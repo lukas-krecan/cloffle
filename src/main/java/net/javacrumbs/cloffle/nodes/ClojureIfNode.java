@@ -13,19 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.javacrumbs.cloffle;
+package net.javacrumbs.cloffle.nodes;
 
 import com.oracle.truffle.api.frame.VirtualFrame;
-import com.oracle.truffle.api.nodes.Node;
 
-public class ClojureLongNode extends ClojureNode {
-    private final long value;
+public class ClojureIfNode extends ClojureNode {
+    @Child
+    private ClojureNode condition;
+    @Child
+    private ClojureNode thenNode;
+    @Child
+    private ClojureNode elseNode;
 
-    public ClojureLongNode(long value) {
-        this.value = value;
+    public ClojureIfNode(ClojureNode condition, ClojureNode thenNode, ClojureNode elseNode) {
+        this.condition = condition;
+        this.thenNode = thenNode;
+        this.elseNode = elseNode;
     }
 
+    @Override
     public Object execute(VirtualFrame virtualFrame) {
-        return value;
+        Object value = condition.execute(virtualFrame);
+        if (!Boolean.FALSE.equals(value) && value != null) {
+            return thenNode.execute(virtualFrame);
+        } else {
+            return elseNode.execute(virtualFrame);
+        }
     }
 }

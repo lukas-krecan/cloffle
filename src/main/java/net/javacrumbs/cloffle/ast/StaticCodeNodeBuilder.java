@@ -17,8 +17,8 @@ package net.javacrumbs.cloffle.ast;
 
 import clojure.lang.Keyword;
 import clojure.lang.Symbol;
-import net.javacrumbs.cloffle.ClojureNode;
-import net.javacrumbs.cloffle.ClojureStaticCall;
+import net.javacrumbs.cloffle.nodes.ClojureNode;
+import net.javacrumbs.cloffle.nodes.ClojureStaticCallNode;
 
 import java.lang.reflect.Method;
 import java.util.List;
@@ -41,7 +41,7 @@ public class StaticCodeNodeBuilder extends AbstractNodeBuilder {
         List<Map<Keyword, Object>> args = (List<Map<Keyword, Object>>) tree.get(Keyword.find("args"));
         try {
             Method method = clazz.getMethod(methodName.getName(), tag, tag);
-            return new ClojureStaticCall(method, build(args.get(0)), build(args.get(1)));
+            return new ClojureStaticCallNode(method, build(args.get(0)), build(args.get(1)));
         } catch (NoSuchMethodException e) {
             throw new AstBuildException(e);
         }

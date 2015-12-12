@@ -13,19 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.javacrumbs.cloffle;
+package net.javacrumbs.cloffle.nodes;
 
-import com.oracle.truffle.api.RootCallTarget;
-import com.oracle.truffle.api.Truffle;
-import com.oracle.truffle.api.frame.FrameDescriptor;
-import net.javacrumbs.cloffle.nodes.ClojureNode;
-import net.javacrumbs.cloffle.nodes.ClojureRootNode;
+import com.oracle.truffle.api.frame.VirtualFrame;
 
-public class Interpreter {
+import java.util.List;
 
-    public Object interpret(ClojureNode node) {
-        FrameDescriptor frameDescriptor = new FrameDescriptor();
-        RootCallTarget callTarget = Truffle.getRuntime().createCallTarget(ClojureRootNode.create(node, frameDescriptor));
-        return callTarget.call();
+public class LetNode extends ClojureNode {
+
+    @Children
+    private List<BindingNode> bindings;
+
+    @Child
+    private ClojureNode body;
+
+    public LetNode(List<BindingNode> bindings, ClojureNode body) {
+        this.bindings = bindings;
+        this.body = body;
+    }
+
+    @Override
+    public Object execute(VirtualFrame virtualFrame) {
+        return null;
     }
 }
