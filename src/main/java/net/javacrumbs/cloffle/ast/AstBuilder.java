@@ -36,6 +36,9 @@ public class AstBuilder {
         new FnMethodNodeBuilder(this),
         new FnNodeBuilder(this),
         new InvokeNodeBuilder(this),
+        new DefNodeBuilder(this),
+        new WithMetaNodeBuilder(this),
+        new VarNodeBuilder(this),
         new LetNodeBuilder(this)
     );
 

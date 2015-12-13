@@ -15,11 +15,29 @@
  */
 package net.javacrumbs.cloffle.nodes;
 
+import clojure.lang.Keyword;
 import clojure.lang.Symbol;
+import clojure.lang.Var;
+import com.oracle.truffle.api.frame.FrameSlot;
+import com.oracle.truffle.api.frame.VirtualFrame;
 
-public class LocalNode extends GetValueNode {
+// FIXME: Is it really a node?
+public class DefNode extends ClojureNode {
+    private final Var var;
 
-    public LocalNode(Symbol name) {
-        super(name);
+    @Child
+    private ClojureNode init;
+
+    public DefNode(Var var, ClojureNode init) {
+        this.var = var;
+        this.init = init;
+    }
+
+    @Override
+    public Object execute(VirtualFrame virtualFrame) {
+        FrameSlot frameSlot = virtualFrame.getFrameDescriptor().addFrameSlot(var);
+        virtualFrame.setObject(frameSlot, init);
+        // strange
+        return null;
     }
 }

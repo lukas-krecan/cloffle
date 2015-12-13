@@ -16,25 +16,23 @@
 package net.javacrumbs.cloffle.ast;
 
 import clojure.lang.Keyword;
+import clojure.lang.Symbol;
 import net.javacrumbs.cloffle.nodes.ClojureNode;
-import net.javacrumbs.cloffle.nodes.FnNode;
-import net.javacrumbs.cloffle.nodes.InvokeNode;
+import net.javacrumbs.cloffle.nodes.DefNode;
 
 import java.util.Map;
 
-public class InvokeNodeBuilder extends AbstractNodeBuilder {
-    private static final Keyword INVOKE = keyword("invoke");
-    private static final Keyword FN = keyword("fn");
-    private static final Keyword ARGS = keyword("args");
+public class WithMetaNodeBuilder extends AbstractNodeBuilder {
+    private static final Keyword WITH_META = keyword("with-meta");
+    private static final Keyword EXPR = keyword("expr");
 
-    protected InvokeNodeBuilder(AstBuilder astBuilder) {
-        super(INVOKE, astBuilder);
+    protected WithMetaNodeBuilder(AstBuilder astBuilder) {
+        super(WITH_META, astBuilder);
     }
 
     @Override
     public ClojureNode buildNode(Map<Keyword, Object> tree) {
-        ClojureNode fn = build(tree.get(FN));
-        ClojureNode[] args = convertToNodes(tree.get(ARGS), ClojureNode[]::new);
-        return new InvokeNode(fn, args);
+        // skip this node and return expr instead
+        return build(tree.get(EXPR));
     }
 }

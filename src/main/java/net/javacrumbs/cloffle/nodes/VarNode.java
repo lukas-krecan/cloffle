@@ -15,11 +15,17 @@
  */
 package net.javacrumbs.cloffle.nodes;
 
-import clojure.lang.Symbol;
+import clojure.lang.Var;
+import com.oracle.truffle.api.frame.VirtualFrame;
 
-public class LocalNode extends GetValueNode {
+public class VarNode extends GetValueNode {
+    public VarNode(Var var) {
+        super(var);
+    }
 
-    public LocalNode(Symbol name) {
-        super(name);
+    @Override
+    public Object execute(VirtualFrame virtualFrame) {
+        // var returns closure node, we want to get the value
+        return ((ClojureNode) super.execute(virtualFrame)).execute(virtualFrame);
     }
 }

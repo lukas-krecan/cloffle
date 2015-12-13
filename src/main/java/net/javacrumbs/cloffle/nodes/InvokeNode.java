@@ -22,12 +22,12 @@ import com.oracle.truffle.api.nodes.DirectCallNode;
 
 public class InvokeNode extends ClojureNode {
     @Child
-    private FnNode method;
+    private ClojureNode method;
 
     @Children
     private final ClojureNode[] args;
 
-    public InvokeNode(FnNode method, ClojureNode[] args) {
+    public InvokeNode(ClojureNode method, ClojureNode[] args) {
         this.method = method;
         this.args = args;
     }

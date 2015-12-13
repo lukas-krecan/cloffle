@@ -73,6 +73,20 @@ public class E2ETest {
         assertThat(interpreter.interpret(node)).isEqualTo(7L);
     }
 
+    @Test
+    public void defFnShouldWork() {
+        String s = "(clojure.tools.analyzer.jvm/analyze '(do (defn myadd [x y z] (+ x y z)) (myadd 1 2 3)))";
+        ClojureNode node = astBuilder.build(eval(s));
+        assertThat(interpreter.interpret(node)).isEqualTo(6L);
+    }
+
+    @Test
+     public void defShouldWork() {
+         String s = "(clojure.tools.analyzer.jvm/analyze '(do (def myval true) (if myval 1 2)))";
+         ClojureNode node = astBuilder.build(eval(s));
+         assertThat(interpreter.interpret(node)).isEqualTo(1L);
+     }
+
     @SuppressWarnings("unchecked")
     private Map<Keyword, Object> eval(String s) {
         return (Map<Keyword, Object>) mikera.cljutils.Clojure.eval(s);

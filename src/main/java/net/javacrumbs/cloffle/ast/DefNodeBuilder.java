@@ -16,25 +16,27 @@
 package net.javacrumbs.cloffle.ast;
 
 import clojure.lang.Keyword;
+import clojure.lang.Symbol;
+import clojure.lang.Var;
+import net.javacrumbs.cloffle.nodes.BindingNode;
 import net.javacrumbs.cloffle.nodes.ClojureNode;
-import net.javacrumbs.cloffle.nodes.FnNode;
-import net.javacrumbs.cloffle.nodes.InvokeNode;
+import net.javacrumbs.cloffle.nodes.DefNode;
 
 import java.util.Map;
 
-public class InvokeNodeBuilder extends AbstractNodeBuilder {
-    private static final Keyword INVOKE = keyword("invoke");
-    private static final Keyword FN = keyword("fn");
-    private static final Keyword ARGS = keyword("args");
+public class DefNodeBuilder extends AbstractNodeBuilder {
+    private static final Keyword DEF = keyword("def");
+    public static final Keyword VAR = keyword("var");
+    private static final Keyword INIT = keyword("init");
 
-    protected InvokeNodeBuilder(AstBuilder astBuilder) {
-        super(INVOKE, astBuilder);
+    protected DefNodeBuilder(AstBuilder astBuilder) {
+        super(DEF, astBuilder);
     }
 
     @Override
     public ClojureNode buildNode(Map<Keyword, Object> tree) {
-        ClojureNode fn = build(tree.get(FN));
-        ClojureNode[] args = convertToNodes(tree.get(ARGS), ClojureNode[]::new);
-        return new InvokeNode(fn, args);
+        Var var = (Var) tree.get(VAR);
+        ClojureNode init = build(tree.get(INIT));
+        return new DefNode(var, init);
     }
 }

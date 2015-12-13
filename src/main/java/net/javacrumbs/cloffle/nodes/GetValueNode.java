@@ -15,27 +15,28 @@
  */
 package net.javacrumbs.cloffle.nodes;
 
+import com.oracle.truffle.api.Truffle;
+import com.oracle.truffle.api.frame.FrameSlot;
 import com.oracle.truffle.api.frame.VirtualFrame;
 
-public class LetNode extends ClojureNode {
+import static com.oracle.truffle.api.frame.FrameInstance.FrameAccess.READ_ONLY;
 
-    @Children // should be of type BindingNode
-    private final BindingNode[] bindings;
+public abstract class GetValueNode extends ClojureNode {
+    private final Object key;
 
-    @Child
-    private ClojureNode body;
-
-    public LetNode(BindingNode[] bindings, ClojureNode body) {
-        this.bindings = bindings;
-        this.body = body;
+    public GetValueNode(Object key) {
+        this.key = key;
     }
 
     @Override
     public Object execute(VirtualFrame virtualFrame) {
-        for (ClojureNode binding: bindings) {
-            binding.execute(virtualFrame);
+        FrameSlot frameSlot = virtualFrame.getFrameDescriptor().findFrameSlot(key);
+        Object localValue = virtualFrame.getValue(frameSlot);
+        if (localValue!=null) {
+            return localValue;
+        } else {
+            // Slow path arg ???
+            return Truffle.getRuntime().iterateFrames(i -> i.getFrame(READ_ONLY, false).getValue(frameSlot));
         }
-        // change frame
-        return body.execute(virtualFrame);
     }
 }
