@@ -36,14 +36,23 @@ public class BindingNode extends ClojureNode {
         this.argId = argId;
     }
 
+    private Object getValue(VirtualFrame virtualFrame) {
+        if (init != null) {
+            return init.execute(virtualFrame);
+        } else if (ARG.equals(local)) {
+            return virtualFrame.getArguments()[argId.intValue()];
+        } else {
+            throw new UnsupportedOperationException();
+        }
+    }
+
     @Override
     public Object execute(VirtualFrame virtualFrame) {
-        if (init != null) {
-            doSetValue(virtualFrame, init.execute(virtualFrame));
-        } else if (ARG.equals(local)) {
-            doSetValue(virtualFrame, virtualFrame.getArguments()[argId.intValue()]);
-        } else{
-            throw new UnsupportedOperationException();
+        Object value = getValue(virtualFrame);
+        if (value != null) {
+            doSetValue(virtualFrame, value);
+        } else {
+            throw new NullPointerException("Value not found");
         }
         // strange
         return null;

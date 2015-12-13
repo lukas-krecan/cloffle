@@ -15,8 +15,10 @@
  */
 package net.javacrumbs.cloffle.nodes;
 
+import com.oracle.truffle.api.RootCallTarget;
 import com.oracle.truffle.api.Truffle;
 import com.oracle.truffle.api.frame.VirtualFrame;
+import com.oracle.truffle.api.nodes.DirectCallNode;
 
 public class InvokeNode extends ClojureNode {
     @Child
@@ -33,10 +35,14 @@ public class InvokeNode extends ClojureNode {
     @Override
     public Object execute(VirtualFrame virtualFrame) {
         Object[] resolvedArgs = new Object[args.length];
+        // move to another node for optimization see the tutorial
         for (int i = 0; i < args.length; i++) {
             resolvedArgs[i] = args[i].execute(virtualFrame);
         }
-        VirtualFrame newVirtualFrame = Truffle.getRuntime().createVirtualFrame(resolvedArgs, virtualFrame.getFrameDescriptor());
-        return method.execute(newVirtualFrame);
+        // optimize
+        RootCallTarget callTarget = Truffle.getRuntime().createCallTarget(ClojureRootNode.create(method, virtualFrame.getFrameDescriptor()));
+        DirectCallNode callNode = Truffle.getRuntime().createDirectCallNode(callTarget);
+        return callNode.call(virtualFrame, resolvedArgs);
+
     }
 }

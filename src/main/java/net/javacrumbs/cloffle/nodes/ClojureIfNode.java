@@ -34,7 +34,7 @@ public class ClojureIfNode extends ClojureNode {
     @Override
     public Object execute(VirtualFrame virtualFrame) {
         Object value = condition.execute(virtualFrame);
-        if (!Boolean.FALSE.equals(value) && value != null) {
+        if (!Boolean.FALSE.equals(value) && ClojureNilNode.NIL.equals(value)) {
             return thenNode.execute(virtualFrame);
         } else {
             return elseNode.execute(virtualFrame);

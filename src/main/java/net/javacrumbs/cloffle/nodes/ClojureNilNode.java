@@ -18,9 +18,10 @@ package net.javacrumbs.cloffle.nodes;
 import com.oracle.truffle.api.frame.VirtualFrame;
 
 public class ClojureNilNode extends ClojureNode {
+    public enum Nil {VALUE;}
+    public static final Nil NIL = Nil.VALUE;
 
     public Object execute(VirtualFrame virtualFrame) {
-        // FIXME: null is not good
-        return null;
+        return NIL;
     }
 }

@@ -16,19 +16,28 @@
 package net.javacrumbs.cloffle.nodes;
 
 import clojure.lang.Symbol;
+import com.oracle.truffle.api.Truffle;
+import com.oracle.truffle.api.frame.FrameSlot;
 import com.oracle.truffle.api.frame.VirtualFrame;
+
+import static com.oracle.truffle.api.frame.FrameInstance.FrameAccess.READ_ONLY;
 
 public class LocalNode extends ClojureNode {
     private final Symbol name;
-    private final Class<?> type;
 
-    public LocalNode(Symbol name, Class<?> type) {
+    public LocalNode(Symbol name) {
         this.name = name;
-        this.type = type;
     }
 
     @Override
     public Object execute(VirtualFrame virtualFrame) {
-        return virtualFrame.getValue(virtualFrame.getFrameDescriptor().findFrameSlot(name));
+        FrameSlot frameSlot = virtualFrame.getFrameDescriptor().findFrameSlot(name);
+        Object localValue = virtualFrame.getValue(frameSlot);
+        if (localValue!=null) {
+            return localValue;
+        } else {
+            // SLow path arg ???
+            return Truffle.getRuntime().iterateFrames(i -> i.getFrame(READ_ONLY, false).getValue(frameSlot));
+        }
     }
 }

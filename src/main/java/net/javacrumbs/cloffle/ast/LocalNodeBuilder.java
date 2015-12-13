@@ -34,7 +34,6 @@ public class LocalNodeBuilder extends AbstractNodeBuilder {
     @Override
     public ClojureNode buildNode(Map<Keyword, Object> tree) {
         Symbol name = (Symbol) tree.get(NAME);
-        Class<?> type = (Class<?>) tree.get(TAG);
-        return new LocalNode(name, type);
+        return new LocalNode(name);
     }
 }

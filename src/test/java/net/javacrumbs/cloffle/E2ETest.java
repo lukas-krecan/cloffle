@@ -66,6 +66,13 @@ public class E2ETest {
         assertThat(interpreter.interpret(node)).isEqualTo(12L);
     }
 
+    @Test
+    public void fnWithLetShouldWork() {
+        String s = "(clojure.tools.analyzer.jvm/analyze '(let [a 5] ((fn [b] (+ a b)) 2)))";
+        ClojureNode node = astBuilder.build(eval(s));
+        assertThat(interpreter.interpret(node)).isEqualTo(7L);
+    }
+
     @SuppressWarnings("unchecked")
     private Map<Keyword, Object> eval(String s) {
         return (Map<Keyword, Object>) mikera.cljutils.Clojure.eval(s);
