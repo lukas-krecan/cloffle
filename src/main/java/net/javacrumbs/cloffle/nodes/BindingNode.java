@@ -59,6 +59,6 @@ public class BindingNode extends ClojureNode {
     }
 
     private void doSetValue(VirtualFrame virtualFrame, Object value) {
-        virtualFrame.setObject(virtualFrame.getFrameDescriptor().addFrameSlot(name), value);
+        virtualFrame.setObject(virtualFrame.getFrameDescriptor().findOrAddFrameSlot(name), value);
     }
 }
