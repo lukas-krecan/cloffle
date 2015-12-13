@@ -62,7 +62,9 @@ public class E2ETest {
     @Test
     public void fnShouldAlsoWork() {
         String s = "(clojure.tools.analyzer.jvm/analyze '((fn [a b c] (+ a b c)) 2 4 6))";
-        ClojureNode node = astBuilder.build(eval(s));
+        Map<Keyword, Object> tree = eval(s);
+        System.out.println(tree);
+        ClojureNode node = astBuilder.build(tree);
         assertThat(interpreter.interpret(node)).isEqualTo(12L);
     }
 
@@ -81,11 +83,18 @@ public class E2ETest {
     }
 
     @Test
-     public void defShouldWork() {
-         String s = "(clojure.tools.analyzer.jvm/analyze '(do (def myval true) (if myval 1 2)))";
-         ClojureNode node = astBuilder.build(eval(s));
-         assertThat(interpreter.interpret(node)).isEqualTo(1L);
-     }
+    public void defShouldWork() {
+        String s = "(clojure.tools.analyzer.jvm/analyze '(do (def myval true) (if myval 1 2)))";
+        ClojureNode node = astBuilder.build(eval(s));
+        assertThat(interpreter.interpret(node)).isEqualTo(1L);
+    }
+
+    @Test
+    public void fibShouldWork() {
+        String s = "(clojure.tools.analyzer.jvm/analyze '(do (defn fib [n] (if (< n 3) 1 (+ (fib (- n 1)) (fib (- n 2))))) (fib 10)))";
+        ClojureNode node = astBuilder.build(eval(s));
+        assertThat(interpreter.interpret(node)).isEqualTo(55L);
+    }
 
     @SuppressWarnings("unchecked")
     private Map<Keyword, Object> eval(String s) {

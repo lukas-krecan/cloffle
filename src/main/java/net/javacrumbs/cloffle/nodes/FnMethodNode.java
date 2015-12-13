@@ -32,7 +32,7 @@ public class FnMethodNode extends ClojureNode {
 
     @Override
     public Object execute(VirtualFrame virtualFrame) {
-        for (ClojureNode binding: params) {
+        for (BindingNode binding: params) {
             binding.execute(virtualFrame);
         }
         return body.execute(virtualFrame);
