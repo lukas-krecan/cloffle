@@ -21,6 +21,7 @@ import net.javacrumbs.cloffle.nodes.ClojureDoubleNode;
 import net.javacrumbs.cloffle.nodes.ClojureLongNode;
 import net.javacrumbs.cloffle.nodes.ClojureNilNode;
 import net.javacrumbs.cloffle.nodes.ClojureNode;
+import net.javacrumbs.cloffle.nodes.ClojureStringNode;
 
 import java.util.Map;
 
@@ -42,6 +43,9 @@ public class ConstNodeBuilder extends AbstractNodeBuilder {
         }
         if (Boolean.class.equals(tag)) {
             return new ClojureBooleanNode((Boolean) tree.get(VAL));
+        }
+        if (String.class.equals(tag)) {
+            return new ClojureStringNode((String) tree.get(VAL));
         }
         if (NIL.equals(tree.get(TYPE))) {
             return new ClojureNilNode();

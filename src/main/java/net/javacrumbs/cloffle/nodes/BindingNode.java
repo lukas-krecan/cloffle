@@ -48,17 +48,20 @@ public class BindingNode extends ClojureNode {
 
     @Override
     public Object execute(VirtualFrame virtualFrame) {
-        Object value = getValue(virtualFrame);
-        if (value != null) {
-            doSetValue(virtualFrame, value);
-        } else {
-            throw new NullPointerException("Value not found");
-        }
+        doSetValue(virtualFrame, getValue(virtualFrame));
         // strange
         return null;
     }
 
     private void doSetValue(VirtualFrame virtualFrame, Object value) {
-        virtualFrame.setObject(virtualFrame.getFrameDescriptor().findOrAddFrameSlot(name), value);
+        if (value != null) {
+            virtualFrame.setObject(virtualFrame.getFrameDescriptor().findOrAddFrameSlot(name), value);
+        } else {
+            throw new NullPointerException("Value not found");
+        }
+    }
+
+    public void rebind(ClojureNode expr, VirtualFrame virtualFrame) {
+        doSetValue(virtualFrame, expr.execute(virtualFrame));
     }
 }

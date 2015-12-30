@@ -17,28 +17,14 @@ package net.javacrumbs.cloffle.nodes;
 
 import com.oracle.truffle.api.frame.VirtualFrame;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.Arrays;
+public class ClojureStringNode extends ClojureNode {
+    private final String value;
 
-public class ClojureStaticCallNode extends ClojureNode {
-    private final Method targetMethod;
-    @Children
-    private final ClojureNode[] args;
-
-    public ClojureStaticCallNode(Method targetMethod, ClojureNode... args) {
-        this.targetMethod = targetMethod;
-        this.args = args;
+    public ClojureStringNode(String value) {
+        this.value = value;
     }
 
-    @Override
     public Object execute(VirtualFrame virtualFrame) {
-        Object[] argValues = Arrays.stream(args).map(a -> a.execute(virtualFrame)).toArray(Object[]::new);
-        try {
-            return targetMethod.invoke(null, argValues);
-        } catch (IllegalAccessException | InvocationTargetException e) {
-            // FIXME
-            throw new IllegalStateException(e);
-        }
+        return value;
     }
 }

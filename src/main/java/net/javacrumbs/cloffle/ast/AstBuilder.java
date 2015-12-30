@@ -39,6 +39,8 @@ public class AstBuilder {
         new DefNodeBuilder(this),
         new WithMetaNodeBuilder(this),
         new VarNodeBuilder(this),
+        new LoopNodeBuilder(this),
+        new RecurNodeBuilder(this),
         new LetNodeBuilder(this)
     );
 

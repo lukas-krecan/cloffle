@@ -23,6 +23,7 @@ import net.javacrumbs.cloffle.nodes.ClojureStaticCallNode;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class StaticCodeNodeBuilder extends AbstractNodeBuilder {
     private static final Keyword STATIC_CALL = keyword("static-call");
@@ -38,10 +39,11 @@ public class StaticCodeNodeBuilder extends AbstractNodeBuilder {
         Class<?> clazz = (Class<?>) tree.get(CLASS);
         Symbol methodName = (Symbol) tree.get(METHOD);
         List<Map<Keyword, Object>> args = (List<Map<Keyword, Object>>) tree.get(keyword("args"));
-        // assert length
+        ClojureNode[] argValues = args.stream().map(this::build).toArray(ClojureNode[]::new);
+        Class<?>[] argTypes = args.stream().map(a -> Object.class).toArray(Class[]::new);
         try {
-            Method method = clazz.getMethod(methodName.getName(), Object.class, Object.class);
-            return new ClojureStaticCallNode(method, build(args.get(0)), build(args.get(1)));
+            Method method = clazz.getMethod(methodName.getName(), argTypes);
+            return new ClojureStaticCallNode(method, argValues);
         } catch (NoSuchMethodException e) {
             throw new AstBuildException(e);
         }

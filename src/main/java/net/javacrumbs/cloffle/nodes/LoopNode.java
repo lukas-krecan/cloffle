@@ -17,7 +17,7 @@ package net.javacrumbs.cloffle.nodes;
 
 import com.oracle.truffle.api.frame.VirtualFrame;
 
-public class LetNode extends ClojureNode {
+public class LoopNode extends ClojureNode {
 
     @Children
     private final BindingNode[] bindings;
@@ -25,7 +25,7 @@ public class LetNode extends ClojureNode {
     @Child
     private ClojureNode body;
 
-    public LetNode(BindingNode[] bindings, ClojureNode body) {
+    public LoopNode(BindingNode[] bindings, ClojureNode body) {
         this.bindings = bindings;
         this.body = body;
     }
@@ -33,9 +33,20 @@ public class LetNode extends ClojureNode {
     @Override
     public Object execute(VirtualFrame virtualFrame) {
         // should create new virtual frame
-        for (ClojureNode binding: bindings) {
+        for (BindingNode binding : bindings) {
             binding.execute(virtualFrame);
         }
-        return body.execute(virtualFrame);
+        while (true) {
+            Object result = body.execute(virtualFrame);
+            if (!(result instanceof RecurNode)) {
+                return result;
+            } else {
+                RecurNode recurNode = (RecurNode)result;
+                ClojureNode[] exprs = recurNode.getExprs();
+                for (int i = 0; i < bindings.length; i++) {
+                    bindings[i].rebind(exprs[i], virtualFrame);
+                }
+            }
+        }
     }
 }
