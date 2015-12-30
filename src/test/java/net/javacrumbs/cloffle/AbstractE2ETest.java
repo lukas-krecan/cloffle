@@ -1,21 +1,8 @@
 package net.javacrumbs.cloffle;
 
-import clojure.lang.Keyword;
-import net.javacrumbs.cloffle.ast.AstBuilder;
-import net.javacrumbs.cloffle.nodes.ClojureNode;
 import org.junit.Test;
 
-import java.util.Map;
-
-import static org.assertj.core.api.Assertions.assertThat;
-
-public class E2ETest {
-    private final AstBuilder astBuilder = new AstBuilder();
-    private final Interpreter interpreter = new Interpreter();
-
-    static {
-        mikera.cljutils.Clojure.require("clojure.tools.analyzer.jvm");
-    }
+public abstract class AbstractE2ETest {
 
     @Test
     public void shouldAddThreeNumbers() {
@@ -90,17 +77,8 @@ public class E2ETest {
 
     @Test
     public void doTimesShouldWork() {
-        doRun("(dotimes [n 5] (println \"n is\" n))", 55L);
+        doRun("(dotimes [n 5] (println \"n is\" n))", null);
     }
 
-    private void doRun(String expression, Object expected) {
-        String s = "(clojure.tools.analyzer.jvm/analyze '" + expression + ")";
-        ClojureNode node = astBuilder.build(eval(s));
-        assertThat(interpreter.interpret(node)).isEqualTo(expected);
-    }
-
-    @SuppressWarnings("unchecked")
-    private Map<Keyword, Object> eval(String s) {
-        return (Map<Keyword, Object>) mikera.cljutils.Clojure.eval(s);
-    }
+    protected abstract void doRun(String expression, Object expected);
 }
