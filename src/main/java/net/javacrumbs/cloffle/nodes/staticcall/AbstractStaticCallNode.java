@@ -36,7 +36,7 @@ public abstract class AbstractStaticCallNode extends ClojureNode {
         if (cachedMethodHandle != null) {
             return cachedMethodHandle;
         }
-        MethodHandles.Lookup lookup = MethodHandles.lookup();
+        MethodHandles.Lookup lookup = MethodHandles.publicLookup();
         try {
             MethodHandle methodHandle = lookup.findStatic(clazz, methodName, MethodType.methodType(returnType, argTypes));
             cachedMethodHandle = methodHandle;

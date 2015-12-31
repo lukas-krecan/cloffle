@@ -35,6 +35,6 @@ public class DefNodeBuilder extends AbstractNodeBuilder {
     public ClojureNode buildNode(Map<Keyword, Object> tree) {
         Var var = (Var) tree.get(VAR);
         ClojureNode init = build(tree.get(INIT));
-        return new DefNode(var, init);
+        return new DefNode(getFrameSlot(var), init);
     }
 }

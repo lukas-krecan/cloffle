@@ -16,8 +16,10 @@
 package net.javacrumbs.cloffle.ast;
 
 import clojure.lang.Keyword;
+import com.oracle.truffle.api.Truffle;
 import net.javacrumbs.cloffle.nodes.ClojureNode;
-import net.javacrumbs.cloffle.nodes.InvokeNode;
+import net.javacrumbs.cloffle.nodes.ClojureRootNode;
+import net.javacrumbs.cloffle.nodes.invoke.InvokeNode;
 
 import java.util.Map;
 
@@ -34,6 +36,6 @@ public class InvokeNodeBuilder extends AbstractNodeBuilder {
     public ClojureNode buildNode(Map<Keyword, Object> tree) {
         ClojureNode fn = build(tree.get(FN));
         ClojureNode[] args = convertToNodes(tree.get(ARGS), ClojureNode[]::new);
-        return new InvokeNode(fn, args);
+        return new InvokeNode(Truffle.getRuntime().createCallTarget(ClojureRootNode.create(fn, getFrameDescriptor())), args);
     }
 }

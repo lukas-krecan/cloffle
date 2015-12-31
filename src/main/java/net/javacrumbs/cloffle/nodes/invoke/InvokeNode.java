@@ -13,22 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.javacrumbs.cloffle.nodes;
+package net.javacrumbs.cloffle.nodes.invoke;
 
 import com.oracle.truffle.api.RootCallTarget;
 import com.oracle.truffle.api.Truffle;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.nodes.DirectCallNode;
+import net.javacrumbs.cloffle.nodes.ClojureNode;
 
 public class InvokeNode extends ClojureNode {
-    @Child
-    private ClojureNode method;
+    private final DirectCallNode callNode;
 
     @Children
     private final ClojureNode[] args;
 
-    public InvokeNode(ClojureNode method, ClojureNode[] args) {
-        this.method = method;
+    public InvokeNode(RootCallTarget callTarget, ClojureNode[] args) {
+        callNode = Truffle.getRuntime().createDirectCallNode(callTarget);
         this.args = args;
     }
 
@@ -39,10 +39,6 @@ public class InvokeNode extends ClojureNode {
         for (int i = 0; i < args.length; i++) {
             resolvedArgs[i] = args[i].executeGeneric(virtualFrame);
         }
-        // optimize
-        RootCallTarget callTarget = Truffle.getRuntime().createCallTarget(ClojureRootNode.create(method, virtualFrame.getFrameDescriptor()));
-        DirectCallNode callNode = Truffle.getRuntime().createDirectCallNode(callTarget);
         return callNode.call(virtualFrame, resolvedArgs);
-
     }
 }

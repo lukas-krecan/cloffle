@@ -37,15 +37,15 @@ public class StaticCallNodeBuilder extends AbstractNodeBuilder {
     @Override
     public ClojureNode buildNode(Map<Keyword, Object> tree) {
         Class<?> clazz = (Class<?>) tree.get(CLASS);
-        Symbol methodName = (Symbol) tree.get(METHOD);
+        String methodName = ((Symbol) tree.get(METHOD)).getName();
         List<Map<Keyword, Object>> args = (List<Map<Keyword, Object>>) tree.get(keyword("args"));
         ClojureNode[] argValues = args.stream().map(this::build).toArray(ClojureNode[]::new);
         if (args.size() == 1) {
-            return UnaryStaticCallNodeGen.create(clazz, methodName.getName(), argValues[0]);
+            return UnaryStaticCallNodeGen.create(clazz, methodName, argValues[0]);
         } else if (args.size() == 2) {
-            return BinaryStaticCallNodeGen.create(clazz, methodName.getName(), argValues[0], argValues[1]);
+            return BinaryStaticCallNodeGen.create(clazz, methodName, argValues[0], argValues[1]);
         } else {
-            return new GenericStaticCallNode(clazz, methodName.getName(), argValues);
+            return new GenericStaticCallNode(clazz, methodName, argValues);
         }
     }
 }

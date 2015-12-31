@@ -18,7 +18,7 @@ package net.javacrumbs.cloffle.ast;
 import clojure.lang.Keyword;
 import clojure.lang.Var;
 import net.javacrumbs.cloffle.nodes.ClojureNode;
-import net.javacrumbs.cloffle.nodes.VarNode;
+import net.javacrumbs.cloffle.nodes.vars.VarNode;
 
 import java.util.Map;
 
@@ -32,6 +32,6 @@ public class VarNodeBuilder extends AbstractNodeBuilder {
     @Override
     public ClojureNode buildNode(Map<Keyword, Object> tree) {
         Var var = (Var) tree.get(VAR);
-        return new VarNode(var);
+        return new VarNode(getFrameSlot(var));
     }
 }

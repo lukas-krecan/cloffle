@@ -21,19 +21,18 @@ import com.oracle.truffle.api.frame.VirtualFrame;
 
 // FIXME: Is it really a node?
 public class DefNode extends ClojureNode {
-    private final Var var;
+    private final FrameSlot frameSlot;
 
     @Child
     private ClojureNode init;
 
-    public DefNode(Var var, ClojureNode init) {
-        this.var = var;
+    public DefNode(FrameSlot frameSlot, ClojureNode init) {
+        this.frameSlot = frameSlot;
         this.init = init;
     }
 
     @Override
     public Object executeGeneric(VirtualFrame virtualFrame) {
-        FrameSlot frameSlot = virtualFrame.getFrameDescriptor().addFrameSlot(var);
         virtualFrame.setObject(frameSlot, init);
         // strange
         return null;

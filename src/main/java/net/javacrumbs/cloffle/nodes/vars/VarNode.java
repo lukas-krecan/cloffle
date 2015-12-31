@@ -13,15 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.javacrumbs.cloffle.nodes;
+package net.javacrumbs.cloffle.nodes.vars;
 
-import clojure.lang.Var;
+import com.oracle.truffle.api.frame.FrameSlot;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.nodes.UnexpectedResultException;
+import net.javacrumbs.cloffle.nodes.ClojureNode;
 
-public class VarNode extends GetValueNode {
-    public VarNode(Var var) {
-        super(var);
+public class VarNode extends AbstractValueNode {
+
+    public VarNode(FrameSlot frameSlot) {
+        super(frameSlot);
     }
 
     @Override
@@ -50,6 +52,6 @@ public class VarNode extends GetValueNode {
 
     private ClojureNode getVarNode(VirtualFrame virtualFrame) {
         // var returns closure node, we want to get the value
-        return (ClojureNode) super.executeGeneric(virtualFrame);
+        return (ClojureNode) getValue(virtualFrame);
     }
 }

@@ -18,7 +18,7 @@ package net.javacrumbs.cloffle.ast;
 import clojure.lang.Keyword;
 import clojure.lang.Symbol;
 import net.javacrumbs.cloffle.nodes.ClojureNode;
-import net.javacrumbs.cloffle.nodes.LocalNode;
+import net.javacrumbs.cloffle.nodes.vars.LocalNode;
 
 import java.util.Map;
 
@@ -33,6 +33,6 @@ public class LocalNodeBuilder extends AbstractNodeBuilder {
     @Override
     public ClojureNode buildNode(Map<Keyword, Object> tree) {
         Symbol name = (Symbol) tree.get(NAME);
-        return new LocalNode(name);
+        return new LocalNode(getFrameSlot(name));
     }
 }

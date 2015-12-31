@@ -17,6 +17,7 @@ package net.javacrumbs.cloffle.ast;
 
 import clojure.lang.Keyword;
 import clojure.lang.Symbol;
+import com.oracle.truffle.api.frame.FrameDescriptor;
 import com.oracle.truffle.api.frame.FrameSlot;
 import net.javacrumbs.cloffle.nodes.ClojureNode;
 
@@ -72,7 +73,11 @@ abstract class AbstractNodeBuilder {
         return Keyword.intern(nsname);
     }
 
-    protected FrameSlot getFrameSlot(Symbol name) {
-        return astBuilder.getFrameDescriptor().findOrAddFrameSlot(name);
+    protected FrameSlot getFrameSlot(Object name) {
+        return getFrameDescriptor().findOrAddFrameSlot(name);
+    }
+
+    protected FrameDescriptor getFrameDescriptor() {
+        return astBuilder.getFrameDescriptor();
     }
 }
