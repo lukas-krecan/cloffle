@@ -17,7 +17,7 @@ package net.javacrumbs.cloffle.ast;
 
 import clojure.lang.Keyword;
 import clojure.lang.Symbol;
-import net.javacrumbs.cloffle.nodes.ClojureInstanceCallNode;
+import net.javacrumbs.cloffle.nodes.InstanceCallNode;
 import net.javacrumbs.cloffle.nodes.ClojureNode;
 
 import java.util.List;
@@ -38,6 +38,6 @@ public class InstanceCallNodeBuilder extends AbstractNodeBuilder {
         Symbol methodName = (Symbol) tree.get(METHOD);
         List<Map<Keyword, Object>> args = (List<Map<Keyword, Object>>) tree.get(keyword("args"));
         ClojureNode[] argValues = args.stream().map(this::build).toArray(ClojureNode[]::new);
-        return new ClojureInstanceCallNode(instance, methodName.getName(), argValues);
+        return new InstanceCallNode(instance, methodName.getName(), argValues);
     }
 }

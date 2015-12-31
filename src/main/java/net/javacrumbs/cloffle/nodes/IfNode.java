@@ -16,8 +16,10 @@
 package net.javacrumbs.cloffle.nodes;
 
 import com.oracle.truffle.api.frame.VirtualFrame;
+import com.oracle.truffle.api.nodes.UnexpectedResultException;
+import net.javacrumbs.cloffle.nodes.value.NilNode;
 
-public class ClojureIfNode extends ClojureNode {
+public class IfNode extends ClojureNode {
     @Child
     private ClojureNode condition;
     @Child
@@ -25,19 +27,27 @@ public class ClojureIfNode extends ClojureNode {
     @Child
     private ClojureNode elseNode;
 
-    public ClojureIfNode(ClojureNode condition, ClojureNode thenNode, ClojureNode elseNode) {
+    public IfNode(ClojureNode condition, ClojureNode thenNode, ClojureNode elseNode) {
         this.condition = condition;
         this.thenNode = thenNode;
         this.elseNode = elseNode;
     }
 
     @Override
-    public Object execute(VirtualFrame virtualFrame) {
-        Object value = condition.execute(virtualFrame);
-        if (!Boolean.FALSE.equals(value) && !ClojureNilNode.NIL.equals(value)) {
-            return thenNode.execute(virtualFrame);
+    public Object executeGeneric(VirtualFrame virtualFrame) {
+        boolean value = getValue(virtualFrame);
+        if (value) {
+            return thenNode.executeGeneric(virtualFrame);
         } else {
-            return elseNode.execute(virtualFrame);
+            return elseNode.executeGeneric(virtualFrame);
+        }
+    }
+
+    private boolean getValue(VirtualFrame virtualFrame) {
+        try {
+            return condition.executeBoolean(virtualFrame);
+        } catch (UnexpectedResultException e) {
+            throw new IllegalStateException(e);
         }
     }
 }

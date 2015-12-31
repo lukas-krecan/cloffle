@@ -18,7 +18,7 @@ package net.javacrumbs.cloffle;
 import com.oracle.truffle.api.RootCallTarget;
 import com.oracle.truffle.api.Truffle;
 import com.oracle.truffle.api.frame.FrameDescriptor;
-import net.javacrumbs.cloffle.nodes.ClojureNilNode;
+import net.javacrumbs.cloffle.nodes.value.NilNode;
 import net.javacrumbs.cloffle.nodes.ClojureNode;
 import net.javacrumbs.cloffle.nodes.ClojureRootNode;
 
@@ -28,6 +28,6 @@ public class Interpreter {
         FrameDescriptor frameDescriptor = new FrameDescriptor();
         RootCallTarget callTarget = Truffle.getRuntime().createCallTarget(ClojureRootNode.create(node, frameDescriptor));
         Object result = callTarget.call();
-        return result != ClojureNilNode.Nil.VALUE ? result : null;
+        return result != NilNode.Nil.VALUE ? result : null;
     }
 }

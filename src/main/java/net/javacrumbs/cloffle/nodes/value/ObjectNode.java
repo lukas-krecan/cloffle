@@ -13,15 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.javacrumbs.cloffle.nodes;
+package net.javacrumbs.cloffle.nodes.value;
 
 import com.oracle.truffle.api.frame.VirtualFrame;
+import net.javacrumbs.cloffle.nodes.ClojureNode;
 
-public class ClojureNilNode extends ClojureNode {
-    public enum Nil {VALUE;}
-    public static final Nil NIL = Nil.VALUE;
+public class ObjectNode extends ClojureNode {
+    private final Object value;
 
-    public Object execute(VirtualFrame virtualFrame) {
-        return NIL;
+    public ObjectNode(Object value) {
+        this.value = value;
+    }
+
+    public Object executeGeneric(VirtualFrame virtualFrame) {
+        return value;
     }
 }

@@ -31,10 +31,10 @@ public class FnMethodNode extends ClojureNode {
     }
 
     @Override
-    public Object execute(VirtualFrame virtualFrame) {
+    public Object executeGeneric(VirtualFrame virtualFrame) {
         for (BindingNode binding: params) {
-            binding.execute(virtualFrame);
+            binding.executeGeneric(virtualFrame);
         }
-        return body.execute(virtualFrame);
+        return body.executeGeneric(virtualFrame);
     }
 }

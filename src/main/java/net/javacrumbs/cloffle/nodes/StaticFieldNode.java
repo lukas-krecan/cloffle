@@ -17,16 +17,22 @@ package net.javacrumbs.cloffle.nodes;
 
 import com.oracle.truffle.api.frame.VirtualFrame;
 
+import java.lang.reflect.Field;
 
-public class ClojureBooleanNode extends ClojureNode {
-    // FIXME; static instances
-    private final boolean value;
+public class StaticFieldNode extends ClojureNode {
+    private final Field field;
 
-    public ClojureBooleanNode(boolean value) {
-        this.value = value;
+    public StaticFieldNode(Field field) {
+        this.field = field;
     }
 
-    public Object execute(VirtualFrame virtualFrame) {
-        return value;
+    @Override
+    public Object executeGeneric(VirtualFrame virtualFrame) {
+        try {
+            return field.get(null);
+        } catch (IllegalAccessException e) {
+            // FIXME
+            throw new IllegalStateException(e);
+        }
     }
 }

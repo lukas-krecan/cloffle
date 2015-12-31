@@ -13,32 +13,38 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.javacrumbs.cloffle.nodes;
+package net.javacrumbs.cloffle.nodes.staticcall;
 
 import com.oracle.truffle.api.frame.VirtualFrame;
+import net.javacrumbs.cloffle.nodes.ClojureNode;
 
+import java.lang.invoke.MethodHandle;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-public class ClojureStaticCallNode extends ClojureNode {
-    private final Method targetMethod;
+public class GenericStaticCallNode extends AbstractStaticCallNode {
     @Children
     private final ClojureNode[] args;
 
-    public ClojureStaticCallNode(Method targetMethod, ClojureNode... args) {
-        this.targetMethod = targetMethod;
+
+    public GenericStaticCallNode(Class<?> clazz, String methodName, ClojureNode[] args) {
+        super(clazz, methodName);
         this.args = args;
     }
 
     @Override
-    public Object execute(VirtualFrame virtualFrame) {
+    public Object executeGeneric(VirtualFrame virtualFrame) {
         Object[] argValues = new Object[args.length];
+        Class<?>[] argTypes = new Class<?>[args.length];
         for (int i=0; i<args.length; i++) {
-            argValues[i] = args[i].execute(virtualFrame);
+            argValues[i] = args[i].executeGeneric(virtualFrame);
+            argTypes[i] = Object.class;
         }
         try {
-            return targetMethod.invoke(null, argValues);
-        } catch (IllegalAccessException | InvocationTargetException e) {
+            // FIXME optimize
+            Method method = getClazz().getMethod(getMethodName(), argTypes);
+            return method.invoke(null, argValues);
+        } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
             // FIXME
             throw new IllegalStateException(e);
         }

@@ -32,7 +32,7 @@ public class ClojureRootNode extends RootNode {
 
     @Override
     public Object execute(VirtualFrame virtualFrame) {
-        return node.execute(virtualFrame);
+        return node.executeGeneric(virtualFrame);
     }
 
     public static ClojureRootNode create(ClojureNode node, FrameDescriptor frameDescriptor) {

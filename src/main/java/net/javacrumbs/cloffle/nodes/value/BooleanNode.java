@@ -13,18 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.javacrumbs.cloffle.nodes;
+package net.javacrumbs.cloffle.nodes.value;
 
 import com.oracle.truffle.api.frame.VirtualFrame;
+import com.oracle.truffle.api.nodes.UnexpectedResultException;
+import net.javacrumbs.cloffle.nodes.ClojureNode;
 
-public class ClojureStringNode extends ClojureNode {
-    private final String value;
 
-    public ClojureStringNode(String value) {
+public class BooleanNode extends ClojureNode {
+    // FIXME; static instances
+    private final boolean value;
+
+    public BooleanNode(boolean value) {
         this.value = value;
     }
 
-    public Object execute(VirtualFrame virtualFrame) {
+    public Object executeGeneric(VirtualFrame virtualFrame) {
+        return value;
+    }
+
+    @Override
+    public boolean executeBoolean(VirtualFrame virtualFrame) throws UnexpectedResultException {
         return value;
     }
 }

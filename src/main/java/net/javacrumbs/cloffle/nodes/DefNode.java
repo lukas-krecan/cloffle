@@ -32,7 +32,7 @@ public class DefNode extends ClojureNode {
     }
 
     @Override
-    public Object execute(VirtualFrame virtualFrame) {
+    public Object executeGeneric(VirtualFrame virtualFrame) {
         FrameSlot frameSlot = virtualFrame.getFrameDescriptor().addFrameSlot(var);
         virtualFrame.setObject(frameSlot, init);
         // strange

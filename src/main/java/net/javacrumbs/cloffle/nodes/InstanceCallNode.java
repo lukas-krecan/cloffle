@@ -20,7 +20,7 @@ import com.oracle.truffle.api.frame.VirtualFrame;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-public class ClojureInstanceCallNode extends ClojureNode {
+public class InstanceCallNode extends ClojureNode {
     @Child
     private ClojureNode instanceNode;
 
@@ -28,19 +28,19 @@ public class ClojureInstanceCallNode extends ClojureNode {
     @Children
     private final ClojureNode[] args;
 
-    public ClojureInstanceCallNode(ClojureNode instanceNode, String methodName, ClojureNode... args) {
+    public InstanceCallNode(ClojureNode instanceNode, String methodName, ClojureNode... args) {
         this.instanceNode = instanceNode;
         this.methodName = methodName;
         this.args = args;
     }
 
     @Override
-    public Object execute(VirtualFrame virtualFrame) {
-        Object instance = instanceNode.execute(virtualFrame);
+    public Object executeGeneric(VirtualFrame virtualFrame) {
+        Object instance = instanceNode.executeGeneric(virtualFrame);
         Object[] argValues = new Object[args.length];
         Class<?>[] argTypes = new Class<?>[args.length];
         for (int i=0; i<args.length; i++) {
-            argValues[i] = args[i].execute(virtualFrame);
+            argValues[i] = args[i].executeGeneric(virtualFrame);
             argTypes[i] = Object.class; //FIXME
         }
         try {

@@ -38,7 +38,7 @@ public class BindingNode extends ClojureNode {
 
     private Object getValue(VirtualFrame virtualFrame) {
         if (init != null) {
-            return init.execute(virtualFrame);
+            return init.executeGeneric(virtualFrame);
         } else if (ARG.equals(local)) {
             return virtualFrame.getArguments()[argId.intValue()];
         } else {
@@ -47,7 +47,7 @@ public class BindingNode extends ClojureNode {
     }
 
     @Override
-    public Object execute(VirtualFrame virtualFrame) {
+    public Object executeGeneric(VirtualFrame virtualFrame) {
         doSetValue(virtualFrame, getValue(virtualFrame));
         // strange
         return null;
@@ -62,6 +62,6 @@ public class BindingNode extends ClojureNode {
     }
 
     public void rebind(ClojureNode expr, VirtualFrame virtualFrame) {
-        doSetValue(virtualFrame, expr.execute(virtualFrame));
+        doSetValue(virtualFrame, expr.executeGeneric(virtualFrame));
     }
 }

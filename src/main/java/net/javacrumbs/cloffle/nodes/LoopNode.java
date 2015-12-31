@@ -31,13 +31,13 @@ public class LoopNode extends ClojureNode {
     }
 
     @Override
-    public Object execute(VirtualFrame virtualFrame) {
+    public Object executeGeneric(VirtualFrame virtualFrame) {
         // should create new virtual frame
         for (BindingNode binding : bindings) {
-            binding.execute(virtualFrame);
+            binding.executeGeneric(virtualFrame);
         }
         while (true) {
-            Object result = body.execute(virtualFrame);
+            Object result = body.executeGeneric(virtualFrame);
             if (!(result instanceof RecurNode)) {
                 return result;
             } else {

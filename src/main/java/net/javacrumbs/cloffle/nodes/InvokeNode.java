@@ -33,11 +33,11 @@ public class InvokeNode extends ClojureNode {
     }
 
     @Override
-    public Object execute(VirtualFrame virtualFrame) {
+    public Object executeGeneric(VirtualFrame virtualFrame) {
         Object[] resolvedArgs = new Object[args.length];
         // move to another node for optimization see the tutorial
         for (int i = 0; i < args.length; i++) {
-            resolvedArgs[i] = args[i].execute(virtualFrame);
+            resolvedArgs[i] = args[i].executeGeneric(virtualFrame);
         }
         // optimize
         RootCallTarget callTarget = Truffle.getRuntime().createCallTarget(ClojureRootNode.create(method, virtualFrame.getFrameDescriptor()));

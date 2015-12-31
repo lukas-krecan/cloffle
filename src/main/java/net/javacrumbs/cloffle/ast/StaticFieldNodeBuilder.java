@@ -18,7 +18,7 @@ package net.javacrumbs.cloffle.ast;
 import clojure.lang.Keyword;
 import clojure.lang.Symbol;
 import net.javacrumbs.cloffle.nodes.ClojureNode;
-import net.javacrumbs.cloffle.nodes.ClojureStaticFieldNode;
+import net.javacrumbs.cloffle.nodes.StaticFieldNode;
 
 import java.lang.reflect.Field;
 import java.util.Map;
@@ -38,7 +38,7 @@ public class StaticFieldNodeBuilder extends AbstractNodeBuilder {
         Symbol fieldName = (Symbol) tree.get(FIELD);
         try {
             Field field = clazz.getField(fieldName.getName());
-            return new ClojureStaticFieldNode(field);
+            return new StaticFieldNode(field);
         } catch (NoSuchFieldException e) {
             throw new AstBuildException(e);
         }

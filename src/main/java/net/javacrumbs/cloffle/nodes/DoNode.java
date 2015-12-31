@@ -31,10 +31,10 @@ public class DoNode extends ClojureNode {
     }
 
     @Override
-    public Object execute(VirtualFrame virtualFrame) {
+    public Object executeGeneric(VirtualFrame virtualFrame) {
         for (ClojureNode statement: statements) {
-            statement.execute(virtualFrame);
+            statement.executeGeneric(virtualFrame);
         }
-        return ret.execute(virtualFrame);
+        return ret.executeGeneric(virtualFrame);
     }
 }

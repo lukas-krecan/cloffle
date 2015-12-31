@@ -13,26 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.javacrumbs.cloffle.nodes;
+package net.javacrumbs.cloffle.nodes.value;
 
 import com.oracle.truffle.api.frame.VirtualFrame;
+import com.oracle.truffle.api.nodes.UnexpectedResultException;
+import net.javacrumbs.cloffle.nodes.ClojureNode;
 
-import java.lang.reflect.Field;
+public class DoubleNode extends ClojureNode {
+    private final double value;
 
-public class ClojureStaticFieldNode extends ClojureNode {
-    private final Field field;
+    public DoubleNode(double value) {
+        this.value = value;
+    }
 
-    public ClojureStaticFieldNode(Field field) {
-        this.field = field;
+    public Object executeGeneric(VirtualFrame virtualFrame) {
+        return value;
     }
 
     @Override
-    public Object execute(VirtualFrame virtualFrame) {
-        try {
-            return field.get(null);
-        } catch (IllegalAccessException e) {
-            // FIXME
-            throw new IllegalStateException(e);
-        }
+    public double executeDouble(VirtualFrame virtualFrame) throws UnexpectedResultException {
+        return value;
     }
 }

@@ -16,12 +16,12 @@
 package net.javacrumbs.cloffle.ast;
 
 import clojure.lang.Keyword;
-import net.javacrumbs.cloffle.nodes.ClojureBooleanNode;
-import net.javacrumbs.cloffle.nodes.ClojureDoubleNode;
-import net.javacrumbs.cloffle.nodes.ClojureLongNode;
-import net.javacrumbs.cloffle.nodes.ClojureNilNode;
+import net.javacrumbs.cloffle.nodes.value.BooleanNode;
+import net.javacrumbs.cloffle.nodes.value.DoubleNode;
+import net.javacrumbs.cloffle.nodes.value.LongNode;
+import net.javacrumbs.cloffle.nodes.value.NilNode;
 import net.javacrumbs.cloffle.nodes.ClojureNode;
-import net.javacrumbs.cloffle.nodes.ClojureStringNode;
+import net.javacrumbs.cloffle.nodes.value.ObjectNode;
 
 import java.util.Map;
 
@@ -36,19 +36,19 @@ public class ConstNodeBuilder extends AbstractNodeBuilder {
     public ClojureNode buildNode(Map<Keyword, Object> tree) {
         Class<?> tag = (Class<?>) tree.get(TAG);
         if (long.class.equals(tag) || Long.class.equals(tag)) {
-            return new ClojureLongNode((Long) tree.get(VAL));
+            return new LongNode((Long) tree.get(VAL));
         }
         if (double.class.equals(tag)) {
-            return new ClojureDoubleNode((Double) tree.get(VAL));
+            return new DoubleNode((Double) tree.get(VAL));
         }
         if (Boolean.class.equals(tag)) {
-            return new ClojureBooleanNode((Boolean) tree.get(VAL));
+            return new BooleanNode((Boolean) tree.get(VAL));
         }
         if (String.class.equals(tag)) {
-            return new ClojureStringNode((String) tree.get(VAL));
+            return new ObjectNode(tree.get(VAL));
         }
         if (NIL.equals(tree.get(TYPE))) {
-            return new ClojureNilNode();
+            return new NilNode();
         }
         throw new AstBuildException("Unsupported constant type " + tree);
     }

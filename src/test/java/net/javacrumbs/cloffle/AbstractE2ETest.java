@@ -7,23 +7,28 @@ import static org.assertj.core.api.Assertions.assertThat;
 public abstract class AbstractE2ETest {
 
     @Test
+    public void shouldDoSimpleAddition() {
+        runAndAssert("(+ 1 2)", 3L);
+    }
+
+    @Test
     public void shouldAddThreeNumbers() {
-        runAndAssert("(+ 1 2 3.0))", 6d);
+        runAndAssert("(+ 1 2 3.0)", 6d);
     }
 
     @Test
     public void shouldInterpretIf() {
-        runAndAssert("(if true 2.0 3.0))", 2.0);
+        runAndAssert("(if true 2.0 3.0)", 2.0);
     }
 
     @Test
     public void shouldInterpretNil() {
-        runAndAssert("(if nil 2.0 3.0))", 3.0);
+        runAndAssert("(if nil 2.0 3.0)", 3.0);
     }
 
     @Test
     public void shouldInterpretLet() {
-        runAndAssert("(let [a 3.0] (+ a 5)))", 8.0);
+        runAndAssert("(let [a 3.0] (+ a 5))", 8.0);
     }
 
     @Test

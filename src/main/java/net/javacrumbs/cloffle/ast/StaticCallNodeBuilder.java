@@ -18,9 +18,10 @@ package net.javacrumbs.cloffle.ast;
 import clojure.lang.Keyword;
 import clojure.lang.Symbol;
 import net.javacrumbs.cloffle.nodes.ClojureNode;
-import net.javacrumbs.cloffle.nodes.ClojureStaticCallNode;
+import net.javacrumbs.cloffle.nodes.staticcall.BinaryStaticCallNodeGen;
+import net.javacrumbs.cloffle.nodes.staticcall.GenericStaticCallNode;
+import net.javacrumbs.cloffle.nodes.staticcall.UnaryStaticCallNodeGen;
 
-import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
 
@@ -39,13 +40,12 @@ public class StaticCallNodeBuilder extends AbstractNodeBuilder {
         Symbol methodName = (Symbol) tree.get(METHOD);
         List<Map<Keyword, Object>> args = (List<Map<Keyword, Object>>) tree.get(keyword("args"));
         ClojureNode[] argValues = args.stream().map(this::build).toArray(ClojureNode[]::new);
-        Class<?>[] argTypes = args.stream().map(a -> Object.class).toArray(Class[]::new);
-        try {
-            Method method = clazz.getMethod(methodName.getName(), argTypes);
-            return new ClojureStaticCallNode(method, argValues);
-        } catch (NoSuchMethodException e) {
-            throw new AstBuildException(e);
+        if (args.size() == 1) {
+            return UnaryStaticCallNodeGen.create(clazz, methodName.getName(), argValues[0]);
+        } else if (args.size() == 2) {
+            return BinaryStaticCallNodeGen.create(clazz, methodName.getName(), argValues[0], argValues[1]);
+        } else {
+            return new GenericStaticCallNode(clazz, methodName.getName(), argValues);
         }
-
     }
 }

@@ -31,11 +31,11 @@ public class LetNode extends ClojureNode {
     }
 
     @Override
-    public Object execute(VirtualFrame virtualFrame) {
+    public Object executeGeneric(VirtualFrame virtualFrame) {
         // should create new virtual frame
         for (ClojureNode binding: bindings) {
-            binding.execute(virtualFrame);
+            binding.executeGeneric(virtualFrame);
         }
-        return body.execute(virtualFrame);
+        return body.executeGeneric(virtualFrame);
     }
 }

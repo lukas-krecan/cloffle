@@ -27,8 +27,8 @@ public class FnNode extends ClojureNode {
     }
 
     @Override
-    public Object execute(VirtualFrame virtualFrame) {
+    public Object executeGeneric(VirtualFrame virtualFrame) {
         // FIXME
-        return fnMethodNodes[0].execute(virtualFrame);
+        return fnMethodNodes[0].executeGeneric(virtualFrame);
     }
 }

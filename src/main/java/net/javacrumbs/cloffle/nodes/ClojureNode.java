@@ -15,12 +15,28 @@
  */
 package net.javacrumbs.cloffle.nodes;
 
+import com.oracle.truffle.api.dsl.TypeSystemReference;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.nodes.Node;
 import com.oracle.truffle.api.nodes.NodeInfo;
+import com.oracle.truffle.api.nodes.UnexpectedResultException;
+import net.javacrumbs.cloffle.ClojureTypes;
+import net.javacrumbs.cloffle.ClojureTypesGen;
 
 @NodeInfo(language = "Clojure in Truffle")
+@TypeSystemReference(ClojureTypes.class)
 public abstract class ClojureNode extends Node {
-    public abstract Object execute(VirtualFrame virtualFrame);
+    public abstract Object executeGeneric(VirtualFrame virtualFrame);
 
+    public boolean executeBoolean(VirtualFrame virtualFrame) throws UnexpectedResultException {
+        return ClojureTypesGen.expectBoolean(this.executeGeneric(virtualFrame));
+    }
+
+    public long executeLong(VirtualFrame virtualFrame) throws UnexpectedResultException {
+        return ClojureTypesGen.expectLong(this.executeGeneric(virtualFrame));
+    }
+
+    public double executeDouble(VirtualFrame virtualFrame) throws UnexpectedResultException {
+        return ClojureTypesGen.expectDouble(this.executeGeneric(virtualFrame));
+    }
 }

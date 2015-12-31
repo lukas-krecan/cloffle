@@ -29,7 +29,7 @@ public abstract class GetValueNode extends ClojureNode {
     }
 
     @Override
-    public Object execute(VirtualFrame virtualFrame) {
+    public Object executeGeneric(VirtualFrame virtualFrame) {
         FrameSlot frameSlot = virtualFrame.getFrameDescriptor().findFrameSlot(key);
         if (frameSlot != null) {
             Object localValue = virtualFrame.getValue(frameSlot);
