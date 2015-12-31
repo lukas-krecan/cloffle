@@ -13,30 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.javacrumbs.cloffle.nodes;
+package net.javacrumbs.cloffle.nodes.binding;
 
 import com.oracle.truffle.api.frame.VirtualFrame;
-import net.javacrumbs.cloffle.nodes.binding.BindingNode;
+import net.javacrumbs.cloffle.nodes.ClojureNode;
 
-public class LetNode extends ClojureNode {
+/**
+ * Initializes binding from argument value.
+ */
+public class ArgInitNode extends ClojureNode {
+    private final Long argId;
 
-    @Children
-    private final BindingNode[] bindings;
-
-    @Child
-    private ClojureNode body;
-
-    public LetNode(BindingNode[] bindings, ClojureNode body) {
-        this.bindings = bindings;
-        this.body = body;
+    public ArgInitNode(Long argId) {
+        this.argId = argId;
     }
 
     @Override
     public Object executeGeneric(VirtualFrame virtualFrame) {
-        // should create new virtual frame
-        for (BindingNode binding: bindings) {
-            binding.executeGeneric(virtualFrame);
-        }
-        return body.executeGeneric(virtualFrame);
+        return virtualFrame.getArguments()[argId.intValue()];
     }
 }

@@ -16,6 +16,8 @@
 package net.javacrumbs.cloffle.ast;
 
 import clojure.lang.Keyword;
+import com.oracle.truffle.api.frame.FrameDescriptor;
+import com.oracle.truffle.api.frame.FrameSlot;
 import net.javacrumbs.cloffle.nodes.ClojureNode;
 
 import java.util.List;
@@ -45,6 +47,7 @@ public class AstBuilder {
         new RecurNodeBuilder(this),
         new LetNodeBuilder(this)
     );
+    private final FrameDescriptor frameDescriptor = new FrameDescriptor();
 
 
     public ClojureNode build(Object node) {
@@ -55,4 +58,7 @@ public class AstBuilder {
             .orElseThrow(() -> new AstBuildException("Unsupported operation " + tree));
     }
 
+    public FrameDescriptor getFrameDescriptor() {
+        return frameDescriptor;
+    }
 }

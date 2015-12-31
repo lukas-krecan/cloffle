@@ -24,6 +24,7 @@ import java.lang.invoke.MethodType;
 public abstract class AbstractStaticCallNode extends ClojureNode {
     private final Class<?> clazz;
     private final String methodName;
+    private MethodHandle cachedMethodHandle;
 
 
     public AbstractStaticCallNode(Class<?> clazz, String methodName) {
@@ -32,9 +33,14 @@ public abstract class AbstractStaticCallNode extends ClojureNode {
     }
 
     protected MethodHandle getMethodHandle(Class<?> returnType, Class<?>... argTypes) throws NoSuchMethodException {
+        if (cachedMethodHandle != null) {
+            return cachedMethodHandle;
+        }
         MethodHandles.Lookup lookup = MethodHandles.lookup();
         try {
-            return lookup.findStatic(clazz, methodName, MethodType.methodType(returnType, argTypes));
+            MethodHandle methodHandle = lookup.findStatic(clazz, methodName, MethodType.methodType(returnType, argTypes));
+            cachedMethodHandle = methodHandle;
+            return methodHandle;
         } catch (IllegalAccessException e) {
             throw new IllegalStateException(e);
         }

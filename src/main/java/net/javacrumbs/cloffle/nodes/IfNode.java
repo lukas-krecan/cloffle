@@ -17,7 +17,6 @@ package net.javacrumbs.cloffle.nodes;
 
 import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.nodes.UnexpectedResultException;
-import net.javacrumbs.cloffle.nodes.value.NilNode;
 
 public class IfNode extends ClojureNode {
     @Child
@@ -40,6 +39,36 @@ public class IfNode extends ClojureNode {
             return thenNode.executeGeneric(virtualFrame);
         } else {
             return elseNode.executeGeneric(virtualFrame);
+        }
+    }
+
+    @Override
+    public long executeLong(VirtualFrame virtualFrame) throws UnexpectedResultException {
+        boolean value = getValue(virtualFrame);
+        if (value) {
+            return thenNode.executeLong(virtualFrame);
+        } else {
+            return elseNode.executeLong(virtualFrame);
+        }
+    }
+
+    @Override
+    public double executeDouble(VirtualFrame virtualFrame) throws UnexpectedResultException {
+        boolean value = getValue(virtualFrame);
+        if (value) {
+            return thenNode.executeDouble(virtualFrame);
+        } else {
+            return elseNode.executeDouble(virtualFrame);
+        }
+    }
+
+    @Override
+    public boolean executeBoolean(VirtualFrame virtualFrame) throws UnexpectedResultException {
+        boolean value = getValue(virtualFrame);
+        if (value) {
+            return thenNode.executeBoolean(virtualFrame);
+        } else {
+            return elseNode.executeBoolean(virtualFrame);
         }
     }
 

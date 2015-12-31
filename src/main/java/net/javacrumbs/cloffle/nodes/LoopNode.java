@@ -16,6 +16,7 @@
 package net.javacrumbs.cloffle.nodes;
 
 import com.oracle.truffle.api.frame.VirtualFrame;
+import net.javacrumbs.cloffle.nodes.binding.BindingNode;
 
 public class LoopNode extends ClojureNode {
 

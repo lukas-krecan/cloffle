@@ -35,7 +35,7 @@ public abstract class BinaryStaticCallNode extends AbstractStaticCallNode {
     }
 
     @Specialization(rewriteOn = NoSuchMethodException.class)
-    protected long call(long first, long second) throws NoSuchMethodException {
+    protected long callLongLong(long first, long second) throws NoSuchMethodException {
         MethodHandle methodHandle = getMethodHandle(long.class);
         try {
             return (long) methodHandle.invokeExact(first, second);
@@ -46,7 +46,7 @@ public abstract class BinaryStaticCallNode extends AbstractStaticCallNode {
     }
 
     @Specialization(rewriteOn = NoSuchMethodException.class)
-    protected double call(double first, double second) throws NoSuchMethodException {
+    protected double callDoubleDouble(double first, double second) throws NoSuchMethodException {
         MethodHandle methodHandle = getMethodHandle(double.class);
         try {
             return (double) methodHandle.invokeExact(first, second);
@@ -57,7 +57,7 @@ public abstract class BinaryStaticCallNode extends AbstractStaticCallNode {
     }
 
     @Specialization(rewriteOn = NoSuchMethodException.class)
-    protected boolean callBoolean(Object first, Object second) throws NoSuchMethodException {
+    protected boolean callObjectBoolean(Object first, Object second) throws NoSuchMethodException {
         MethodHandle methodHandle = getMethodHandle(boolean.class, Object.class, Object.class);
         try {
             return (boolean) methodHandle.invokeExact(first, second);
@@ -68,7 +68,7 @@ public abstract class BinaryStaticCallNode extends AbstractStaticCallNode {
     }
 
     @Specialization
-    protected Object call(Object first, Object second){
+    protected Object callObjectObject(Object first, Object second){
         MethodHandle methodHandle;
         try {
             methodHandle = getMethodHandle(Object.class);

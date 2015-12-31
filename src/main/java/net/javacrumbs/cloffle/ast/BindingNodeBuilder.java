@@ -17,8 +17,9 @@ package net.javacrumbs.cloffle.ast;
 
 import clojure.lang.Keyword;
 import clojure.lang.Symbol;
-import net.javacrumbs.cloffle.nodes.BindingNode;
 import net.javacrumbs.cloffle.nodes.ClojureNode;
+import net.javacrumbs.cloffle.nodes.binding.ArgInitNode;
+import net.javacrumbs.cloffle.nodes.binding.BindingNodeGen;
 
 import java.util.Map;
 
@@ -28,6 +29,7 @@ public class BindingNodeBuilder extends AbstractNodeBuilder {
     private static final Keyword INIT = keyword("init");
     private static final Keyword LOCAL = keyword("local");
     private static final Keyword ARG_ID = keyword("arg-id");
+    public static final Keyword ARG = Keyword.find("arg");
 
     protected BindingNodeBuilder(AstBuilder astBuilder) {
         super(BINDING, astBuilder);
@@ -39,6 +41,13 @@ public class BindingNodeBuilder extends AbstractNodeBuilder {
         ClojureNode init = buildOptional(tree.get(INIT));
         Keyword local = (Keyword) tree.get(LOCAL);
         Long argId = (Long) tree.get(ARG_ID);
-        return new BindingNode(name, init, local, argId);
+        if (init == null) {
+            if (ARG.equals(local)) {
+                init = new ArgInitNode(argId);
+            } else {
+                throw new UnsupportedOperationException();
+            }
+        }
+        return BindingNodeGen.create(name, init, getFrameSlot(name));
     }
 }

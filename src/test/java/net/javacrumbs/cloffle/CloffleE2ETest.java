@@ -12,7 +12,7 @@ import java.util.Map;
 
 public class CloffleE2ETest extends AbstractE2ETest {
     private final AstBuilder astBuilder = new AstBuilder();
-    private final Interpreter interpreter = new Interpreter();
+    private final Interpreter interpreter = new Interpreter(astBuilder.getFrameDescriptor());
 
     static {
         mikera.cljutils.Clojure.require("clojure.tools.analyzer.jvm");

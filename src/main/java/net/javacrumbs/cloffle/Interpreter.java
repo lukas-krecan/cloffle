@@ -24,8 +24,13 @@ import net.javacrumbs.cloffle.nodes.ClojureRootNode;
 
 public class Interpreter {
 
+    private final FrameDescriptor frameDescriptor;
+
+    public Interpreter(FrameDescriptor frameDescriptor) {
+        this.frameDescriptor = frameDescriptor;
+    }
+
     public Object interpret(ClojureNode node) {
-        FrameDescriptor frameDescriptor = new FrameDescriptor();
         RootCallTarget callTarget = Truffle.getRuntime().createCallTarget(ClojureRootNode.create(node, frameDescriptor));
         Object result = callTarget.call();
         return result != NilNode.Nil.VALUE ? result : null;

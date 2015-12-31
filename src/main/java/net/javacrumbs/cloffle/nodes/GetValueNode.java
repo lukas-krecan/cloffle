@@ -17,7 +17,9 @@ package net.javacrumbs.cloffle.nodes;
 
 import com.oracle.truffle.api.Truffle;
 import com.oracle.truffle.api.frame.FrameSlot;
+import com.oracle.truffle.api.frame.FrameSlotTypeException;
 import com.oracle.truffle.api.frame.VirtualFrame;
+import com.oracle.truffle.api.nodes.UnexpectedResultException;
 
 import static com.oracle.truffle.api.frame.FrameInstance.FrameAccess.READ_ONLY;
 
@@ -30,7 +32,7 @@ public abstract class GetValueNode extends ClojureNode {
 
     @Override
     public Object executeGeneric(VirtualFrame virtualFrame) {
-        FrameSlot frameSlot = virtualFrame.getFrameDescriptor().findFrameSlot(key);
+        FrameSlot frameSlot = getFrameSlot(virtualFrame);
         if (frameSlot != null) {
             Object localValue = virtualFrame.getValue(frameSlot);
             if (localValue != null) {
@@ -42,6 +44,47 @@ public abstract class GetValueNode extends ClojureNode {
         } else {
             throw new IllegalStateException("Variable not found " + getKey());
         }
+    }
+
+    @Override
+    public long executeLong(VirtualFrame virtualFrame) throws UnexpectedResultException {
+        FrameSlot frameSlot = getFrameSlot(virtualFrame);
+        if (frameSlot != null) {
+            try {
+                return virtualFrame.getLong(frameSlot);
+            } catch (FrameSlotTypeException ignore) {
+            }
+        }
+        throw new UnexpectedResultException(executeGeneric(virtualFrame));
+    }
+
+    @Override
+    public double executeDouble(VirtualFrame virtualFrame) throws UnexpectedResultException {
+        FrameSlot frameSlot = getFrameSlot(virtualFrame);
+        if (frameSlot != null) {
+            try {
+                return virtualFrame.getDouble(frameSlot);
+            } catch (FrameSlotTypeException ignore) {
+            }
+        }
+        throw new UnexpectedResultException(executeGeneric(virtualFrame));
+    }
+
+    @Override
+    public boolean executeBoolean(VirtualFrame virtualFrame) throws UnexpectedResultException {
+        FrameSlot frameSlot = getFrameSlot(virtualFrame);
+        if (frameSlot != null) {
+            try {
+                return virtualFrame.getBoolean(frameSlot);
+            } catch (FrameSlotTypeException ignore) {
+            }
+        }
+        throw new UnexpectedResultException(executeGeneric(virtualFrame));
+    }
+
+
+    private FrameSlot getFrameSlot(VirtualFrame virtualFrame) {
+        return virtualFrame.getFrameDescriptor().findFrameSlot(key);
     }
 
     public Object getKey() {

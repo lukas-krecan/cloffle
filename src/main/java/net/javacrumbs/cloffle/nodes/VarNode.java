@@ -17,6 +17,7 @@ package net.javacrumbs.cloffle.nodes;
 
 import clojure.lang.Var;
 import com.oracle.truffle.api.frame.VirtualFrame;
+import com.oracle.truffle.api.nodes.UnexpectedResultException;
 
 public class VarNode extends GetValueNode {
     public VarNode(Var var) {
@@ -25,8 +26,30 @@ public class VarNode extends GetValueNode {
 
     @Override
     public Object executeGeneric(VirtualFrame virtualFrame) {
-        // var returns closure node, we want to get the value
-        ClojureNode node = (ClojureNode) super.executeGeneric(virtualFrame);
+        ClojureNode node = getVarNode(virtualFrame);
         return node.executeGeneric(virtualFrame);
+    }
+
+    @Override
+    public boolean executeBoolean(VirtualFrame virtualFrame) throws UnexpectedResultException {
+        ClojureNode node = getVarNode(virtualFrame);
+        return node.executeBoolean(virtualFrame);
+    }
+
+    @Override
+    public long executeLong(VirtualFrame virtualFrame) throws UnexpectedResultException {
+        ClojureNode node = getVarNode(virtualFrame);
+        return node.executeLong(virtualFrame);
+    }
+
+    @Override
+    public double executeDouble(VirtualFrame virtualFrame) throws UnexpectedResultException {
+        ClojureNode node = getVarNode(virtualFrame);
+        return node.executeDouble(virtualFrame);
+    }
+
+    private ClojureNode getVarNode(VirtualFrame virtualFrame) {
+        // var returns closure node, we want to get the value
+        return (ClojureNode) super.executeGeneric(virtualFrame);
     }
 }
