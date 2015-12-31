@@ -17,7 +17,6 @@ package net.javacrumbs.cloffle.ast;
 
 import clojure.lang.Keyword;
 import clojure.lang.Symbol;
-import net.javacrumbs.cloffle.nodes.BindingNode;
 import net.javacrumbs.cloffle.nodes.ClojureNode;
 import net.javacrumbs.cloffle.nodes.LocalNode;
 

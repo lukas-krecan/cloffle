@@ -76,8 +76,18 @@ public abstract class AbstractE2ETest {
     }
 
     @Test
+    public void staticFieldShouldWork() {
+        doRun("(Math/PI)", Math.PI);
+    }
+
+    @Test
+    public void instanceCallShouldWork() {
+        doRun("(.toUpperCase \"fred\")", "FRED");
+    }
+
+    @Test
     public void doTimesShouldWork() {
-        doRun("(dotimes [n 5] (println \"n is\" n))", null);
+        doRun("(dotimes [n 5] (.println (System/out) n))", null);
     }
 
     protected abstract void doRun(String expression, Object expected);

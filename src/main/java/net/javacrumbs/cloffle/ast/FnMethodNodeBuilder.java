@@ -19,9 +19,7 @@ import clojure.lang.Keyword;
 import net.javacrumbs.cloffle.nodes.BindingNode;
 import net.javacrumbs.cloffle.nodes.ClojureNode;
 import net.javacrumbs.cloffle.nodes.FnMethodNode;
-import net.javacrumbs.cloffle.nodes.LetNode;
 
-import java.util.List;
 import java.util.Map;
 
 public class FnMethodNodeBuilder extends AbstractNodeBuilder {

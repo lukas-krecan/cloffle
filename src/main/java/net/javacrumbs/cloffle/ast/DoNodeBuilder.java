@@ -18,9 +18,7 @@ package net.javacrumbs.cloffle.ast;
 import clojure.lang.Keyword;
 import net.javacrumbs.cloffle.nodes.ClojureNode;
 import net.javacrumbs.cloffle.nodes.DoNode;
-import net.javacrumbs.cloffle.nodes.LetNode;
 
-import java.util.List;
 import java.util.Map;
 
 public class DoNodeBuilder extends AbstractNodeBuilder {

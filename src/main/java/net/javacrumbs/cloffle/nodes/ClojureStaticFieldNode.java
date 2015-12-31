@@ -17,28 +17,20 @@ package net.javacrumbs.cloffle.nodes;
 
 import com.oracle.truffle.api.frame.VirtualFrame;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import java.lang.reflect.Field;
 
-public class ClojureStaticCallNode extends ClojureNode {
-    private final Method targetMethod;
-    @Children
-    private final ClojureNode[] args;
+public class ClojureStaticFieldNode extends ClojureNode {
+    private final Field field;
 
-    public ClojureStaticCallNode(Method targetMethod, ClojureNode... args) {
-        this.targetMethod = targetMethod;
-        this.args = args;
+    public ClojureStaticFieldNode(Field field) {
+        this.field = field;
     }
 
     @Override
     public Object execute(VirtualFrame virtualFrame) {
-        Object[] argValues = new Object[args.length];
-        for (int i=0; i<args.length; i++) {
-            argValues[i] = args[i].execute(virtualFrame);
-        }
         try {
-            return targetMethod.invoke(null, argValues);
-        } catch (IllegalAccessException | InvocationTargetException e) {
+            return field.get(null);
+        } catch (IllegalAccessException e) {
             // FIXME
             throw new IllegalStateException(e);
         }

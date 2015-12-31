@@ -20,12 +20,7 @@ import net.javacrumbs.cloffle.nodes.BindingNode;
 import net.javacrumbs.cloffle.nodes.ClojureNode;
 import net.javacrumbs.cloffle.nodes.LetNode;
 
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
-
-import static java.util.stream.Collectors.toList;
 
 public class LetNodeBuilder extends AbstractNodeBuilder {
     private static final Keyword LET = keyword("let");

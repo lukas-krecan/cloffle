@@ -20,25 +20,33 @@ import com.oracle.truffle.api.frame.VirtualFrame;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-public class ClojureStaticCallNode extends ClojureNode {
-    private final Method targetMethod;
+public class ClojureInstanceCallNode extends ClojureNode {
+    @Child
+    private ClojureNode instanceNode;
+
+    private final String methodName;
     @Children
     private final ClojureNode[] args;
 
-    public ClojureStaticCallNode(Method targetMethod, ClojureNode... args) {
-        this.targetMethod = targetMethod;
+    public ClojureInstanceCallNode(ClojureNode instanceNode, String methodName, ClojureNode... args) {
+        this.instanceNode = instanceNode;
+        this.methodName = methodName;
         this.args = args;
     }
 
     @Override
     public Object execute(VirtualFrame virtualFrame) {
+        Object instance = instanceNode.execute(virtualFrame);
         Object[] argValues = new Object[args.length];
+        Class<?>[] argTypes = new Class<?>[args.length];
         for (int i=0; i<args.length; i++) {
             argValues[i] = args[i].execute(virtualFrame);
+            argTypes[i] = Object.class; //FIXME
         }
         try {
-            return targetMethod.invoke(null, argValues);
-        } catch (IllegalAccessException | InvocationTargetException e) {
+            Method method = instance.getClass().getMethod(methodName, argTypes);
+            return method.invoke(instance, argValues);
+        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
             // FIXME
             throw new IllegalStateException(e);
         }

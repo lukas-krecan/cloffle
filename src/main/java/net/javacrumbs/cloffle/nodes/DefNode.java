@@ -15,8 +15,6 @@
  */
 package net.javacrumbs.cloffle.nodes;
 
-import clojure.lang.Keyword;
-import clojure.lang.Symbol;
 import clojure.lang.Var;
 import com.oracle.truffle.api.frame.FrameSlot;
 import com.oracle.truffle.api.frame.VirtualFrame;

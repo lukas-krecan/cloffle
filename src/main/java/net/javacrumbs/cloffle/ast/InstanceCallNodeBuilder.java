@@ -17,36 +17,27 @@ package net.javacrumbs.cloffle.ast;
 
 import clojure.lang.Keyword;
 import clojure.lang.Symbol;
+import net.javacrumbs.cloffle.nodes.ClojureInstanceCallNode;
 import net.javacrumbs.cloffle.nodes.ClojureNode;
-import net.javacrumbs.cloffle.nodes.ClojureStaticCallNode;
 
-import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
-public class StaticCodeNodeBuilder extends AbstractNodeBuilder {
-    private static final Keyword STATIC_CALL = keyword("static-call");
-    private static final Keyword CLASS = keyword("class");
+public class InstanceCallNodeBuilder extends AbstractNodeBuilder {
+    private static final Keyword INSTANCE_CALL = keyword("instance-call");
+    private static final Keyword INSTANCE = keyword("instance");
     private static final Keyword METHOD = keyword("method");
 
-    protected StaticCodeNodeBuilder(AstBuilder astBuilder) {
-        super(STATIC_CALL, astBuilder);
+    protected InstanceCallNodeBuilder(AstBuilder astBuilder) {
+        super(INSTANCE_CALL, astBuilder);
     }
 
     @Override
     public ClojureNode buildNode(Map<Keyword, Object> tree) {
-        Class<?> clazz = (Class<?>) tree.get(CLASS);
+        ClojureNode instance =  build(tree.get(INSTANCE));
         Symbol methodName = (Symbol) tree.get(METHOD);
         List<Map<Keyword, Object>> args = (List<Map<Keyword, Object>>) tree.get(keyword("args"));
         ClojureNode[] argValues = args.stream().map(this::build).toArray(ClojureNode[]::new);
-        Class<?>[] argTypes = args.stream().map(a -> Object.class).toArray(Class[]::new);
-        try {
-            Method method = clazz.getMethod(methodName.getName(), argTypes);
-            return new ClojureStaticCallNode(method, argValues);
-        } catch (NoSuchMethodException e) {
-            throw new AstBuildException(e);
-        }
-
+        return new ClojureInstanceCallNode(instance, methodName.getName(), argValues);
     }
 }

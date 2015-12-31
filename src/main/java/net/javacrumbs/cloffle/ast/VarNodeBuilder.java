@@ -18,7 +18,6 @@ package net.javacrumbs.cloffle.ast;
 import clojure.lang.Keyword;
 import clojure.lang.Var;
 import net.javacrumbs.cloffle.nodes.ClojureNode;
-import net.javacrumbs.cloffle.nodes.DefNode;
 import net.javacrumbs.cloffle.nodes.VarNode;
 
 import java.util.Map;

@@ -16,12 +16,10 @@
 package net.javacrumbs.cloffle.ast;
 
 import clojure.lang.Keyword;
-import net.javacrumbs.cloffle.nodes.BindingNode;
 import net.javacrumbs.cloffle.nodes.ClojureNode;
 import net.javacrumbs.cloffle.nodes.FnMethodNode;
 import net.javacrumbs.cloffle.nodes.FnNode;
 
-import java.util.List;
 import java.util.Map;
 
 public class FnNodeBuilder extends AbstractNodeBuilder {

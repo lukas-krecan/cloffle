@@ -29,7 +29,9 @@ public class AstBuilder {
     private final List<AbstractNodeBuilder> builders = asList(
         new ConstNodeBuilder(this),
         new IfNodeBuilder(this),
-        new StaticCodeNodeBuilder(this),
+        new StaticCallNodeBuilder(this),
+        new StaticFieldNodeBuilder(this),
+        new InstanceCallNodeBuilder(this),
         new BindingNodeBuilder(this),
         new LocalNodeBuilder(this),
         new DoNodeBuilder(this),

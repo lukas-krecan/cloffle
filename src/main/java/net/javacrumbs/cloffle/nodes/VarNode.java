@@ -26,6 +26,7 @@ public class VarNode extends GetValueNode {
     @Override
     public Object execute(VirtualFrame virtualFrame) {
         // var returns closure node, we want to get the value
-        return ((ClojureNode) super.execute(virtualFrame)).execute(virtualFrame);
+        ClojureNode node = (ClojureNode) super.execute(virtualFrame);
+        return node.execute(virtualFrame);
     }
 }

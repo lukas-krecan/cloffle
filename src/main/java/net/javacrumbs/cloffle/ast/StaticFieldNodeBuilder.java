@@ -16,24 +16,32 @@
 package net.javacrumbs.cloffle.ast;
 
 import clojure.lang.Keyword;
+import clojure.lang.Symbol;
 import net.javacrumbs.cloffle.nodes.ClojureNode;
-import net.javacrumbs.cloffle.nodes.InvokeNode;
+import net.javacrumbs.cloffle.nodes.ClojureStaticFieldNode;
 
+import java.lang.reflect.Field;
 import java.util.Map;
 
-public class InvokeNodeBuilder extends AbstractNodeBuilder {
-    private static final Keyword INVOKE = keyword("invoke");
-    private static final Keyword FN = keyword("fn");
-    private static final Keyword ARGS = keyword("args");
+public class StaticFieldNodeBuilder extends AbstractNodeBuilder {
+    private static final Keyword STATIC_FIELD = keyword("static-field");
+    private static final Keyword CLASS = keyword("class");
+    private static final Keyword FIELD = keyword("field");
 
-    protected InvokeNodeBuilder(AstBuilder astBuilder) {
-        super(INVOKE, astBuilder);
+    protected StaticFieldNodeBuilder(AstBuilder astBuilder) {
+        super(STATIC_FIELD, astBuilder);
     }
 
     @Override
     public ClojureNode buildNode(Map<Keyword, Object> tree) {
-        ClojureNode fn = build(tree.get(FN));
-        ClojureNode[] args = convertToNodes(tree.get(ARGS), ClojureNode[]::new);
-        return new InvokeNode(fn, args);
+        Class<?> clazz = (Class<?>) tree.get(CLASS);
+        Symbol fieldName = (Symbol) tree.get(FIELD);
+        try {
+            Field field = clazz.getField(fieldName.getName());
+            return new ClojureStaticFieldNode(field);
+        } catch (NoSuchFieldException e) {
+            throw new AstBuildException(e);
+        }
+
     }
 }

@@ -31,12 +31,20 @@ public abstract class GetValueNode extends ClojureNode {
     @Override
     public Object execute(VirtualFrame virtualFrame) {
         FrameSlot frameSlot = virtualFrame.getFrameDescriptor().findFrameSlot(key);
-        Object localValue = virtualFrame.getValue(frameSlot);
-        if (localValue!=null) {
-            return localValue;
+        if (frameSlot != null) {
+            Object localValue = virtualFrame.getValue(frameSlot);
+            if (localValue != null) {
+                return localValue;
+            } else {
+                // Slow path arg ???
+                return Truffle.getRuntime().iterateFrames(i -> i.getFrame(READ_ONLY, false).getValue(frameSlot));
+            }
         } else {
-            // Slow path arg ???
-            return Truffle.getRuntime().iterateFrames(i -> i.getFrame(READ_ONLY, false).getValue(frameSlot));
+            throw new IllegalStateException("Variable not found " + getKey());
         }
+    }
+
+    public Object getKey() {
+        return key;
     }
 }
