@@ -73,7 +73,7 @@ public abstract class AbstractE2ETest {
 
     @Test
     public void fibShouldBeFast() {
-        System.out.println(run("(let [start (System/currentTimeMillis)] (do (defn fib [n] (if (< n 3) 1 (+ (fib (- n 1)) (fib (- n 2))))) (fib 30) (- (System/currentTimeMillis) start)))"));
+        System.out.println(run("(do (defn fib [n] (if (< n 3) 1 (+ (fib (- n 1)) (fib (- n 2))))) (fib 30) (let [start (System/currentTimeMillis)] (dotimes [n 5] (fib 30)) (- (System/currentTimeMillis) start))))"));
     }
 
     @Test

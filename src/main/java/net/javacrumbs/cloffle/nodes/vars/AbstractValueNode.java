@@ -26,6 +26,7 @@ import static com.oracle.truffle.api.frame.FrameInstance.FrameAccess.READ_ONLY;
 
 abstract class AbstractValueNode extends ClojureNode {
     private final FrameSlot frameSlot;
+    private MaterializedFrame cachedFrame;
 
     protected AbstractValueNode(FrameSlot frameSlot) {
         this.frameSlot = frameSlot;
@@ -37,8 +38,19 @@ abstract class AbstractValueNode extends ClojureNode {
             if (localValue != null) {
                 return localValue;
             } else {
+                if (cachedFrame != null) { // FIXME: is it correct?
+                    return cachedFrame.getValue(frameSlot);
+                }
                 // Slow path arg ???
-                return Truffle.getRuntime().iterateFrames(fi -> fi.getFrame(READ_ONLY, false).getValue(frameSlot));
+                FrameInstance frameInstance = Truffle.getRuntime().iterateFrames(fi -> {
+                    if (fi.getFrame(READ_ONLY, false).getValue(frameSlot) != null) {
+                        return fi;
+                    } else {
+                        return null;
+                    }
+                });
+                cachedFrame = frameInstance.getFrame(READ_ONLY, false).materialize();
+                return cachedFrame.getValue(frameSlot);
             }
         } else {
             throw new IllegalStateException("Variable not found " + frameSlot);
